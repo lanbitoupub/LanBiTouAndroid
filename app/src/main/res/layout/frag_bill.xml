@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    
+    <!--<com.lanbitou.views.RatioBar-->
+        <!--android:id="@+id/bill_top_ratio"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content" />-->
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:orientation="horizontal"
+        >
+        <TextView
+            android:background="#e43a0b"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/in"
+            android:gravity="center"
+            />
+        <TextView
+            android:background="#0d05f2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/out"
+            android:gravity="center"
+            />
+    </LinearLayout>
+    <ListView
+        android:id="@+id/bill_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:dividerHeight="@dimen/bill_list_divider"
+        android:divider="@color/billListDividerColor"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1"
+        >
+    </ListView>
+
+    <Button
+        android:id="@+id/go_add_bill_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:text="添加"
+        android:layout_gravity="center_horizontal|bottom"
+        />
+
+</LinearLayout>

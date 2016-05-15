@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">LanBiTou</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="newest_notes">最新笔记</string>
+    <string name="all_notes">所有笔记</string>
+    <string name="bill">账单</string>
+    <string name="schedule">日程</string>
+    <string name="setting">设置</string>
+    <string name="last_synch_date">上次同时间</string>
+    <string name="addNewBill">添加新账单</string>
+    <string name="in">收入</string>
+    <string name="out">支出</string>
+</resources>

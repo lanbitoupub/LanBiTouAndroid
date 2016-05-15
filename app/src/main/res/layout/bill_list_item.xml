@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <LinearLayout
+        android:id="@+id/bill_list_item_left"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="right|center_horizontal"
+
+        >
+        <TextView
+            android:id="@+id/bill_list_item_left_money"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:background="@color/billListItemLeftColor"
+            android:layout_marginRight="@dimen/bill_list_item_in_margin"
+            android:gravity="right|center_horizontal"
+
+            />
+        <TextView
+            android:id="@+id/bill_list_item_left_remark"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:background="#fff"
+            android:layout_marginRight="@dimen/bill_list_item_in_margin"
+            />
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/bill_list_item_type"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.2"
+        android:background="#678899"
+        android:layout_gravity="center"
+        android:gravity="center"/>
+
+    <LinearLayout
+        android:id="@+id/bill_list_item_right"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:id="@+id/bill_list_item_right_money"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:background="@color/billListItemLeftColor"
+            android:layout_marginLeft="@dimen/bill_list_item_in_margin"
+            android:layout_gravity="center_horizontal"
+            />
+        <TextView
+            android:id="@+id/bill_list_item_right_remark"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:background="#fff"
+            android:layout_marginLeft="@dimen/bill_list_item_in_margin"
+            />
+    </LinearLayout>
+
+
+</LinearLayout>

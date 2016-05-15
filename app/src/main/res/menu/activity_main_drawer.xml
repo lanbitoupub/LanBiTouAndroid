@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--侧边栏下部分-->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_newest_notes"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="@string/newest_notes" />
+
+        <item
+            android:id="@+id/nav_all_notes"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="@string/all_notes" />
+
+
+        <item
+            android:id="@+id/nav_bill"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="@string/bill" />
+
+        <item
+            android:id="@+id/nav_schedule"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/schedule" />
+    </group>
+
+    <item android:title="">
+        <menu>
+            <item
+                android:id="@+id/nav_setting"
+                android:icon="@drawable/ic_menu_share"
+                android:title="@string/setting" />
+            <item
+                android:id="@+id/nav_last_synch_date"
+                android:icon="@drawable/ic_menu_send"
+                android:title="@string/last_synch_date" />
+        </menu>
+    </item>
+
+</menu>

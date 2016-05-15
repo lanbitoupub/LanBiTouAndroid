@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="white">#fff</color>
+    <color name="colorAccent">#fff</color>
+    <color name="billListDividerColor">#fff</color>
+    <color name="billListItemLeftColor">#fff</color>
+    <color name="billListItemRightColor">#fff</color>
+    <color name="red">#d0f10707</color>
+    <color name="blue">#d4015fec</color>
+</resources>
