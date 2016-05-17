@@ -28,7 +28,7 @@ public class AddBillActivity extends Activity {
 
     Bill bill;
 
-    boolean isIn = true;
+    boolean isIn = true;        //是不是收入
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +80,7 @@ public class AddBillActivity extends Activity {
         public void onClick(View view) {
 
             String type = typeEt.getText().toString();
+            double money = Double.parseDouble(moneyEt.getText().toString());
 
             bill.setUid(1);
             bill.setFolder("日常");
