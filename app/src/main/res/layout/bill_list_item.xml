@@ -12,8 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:gravity="right|center_horizontal"
-
+        android:gravity="right"
         >
         <TextView
             android:id="@+id/bill_list_item_left_money"
@@ -21,8 +20,6 @@
             android:layout_width="wrap_content"
             android:background="@color/billListItemLeftColor"
             android:layout_marginRight="@dimen/bill_list_item_in_margin"
-            android:gravity="right|center_horizontal"
-
             />
         <TextView
             android:id="@+id/bill_list_item_left_remark"
@@ -56,7 +53,7 @@
             android:layout_width="wrap_content"
             android:background="@color/billListItemLeftColor"
             android:layout_marginLeft="@dimen/bill_list_item_in_margin"
-            android:layout_gravity="center_horizontal"
+            android:layout_gravity="left|center_horizontal"
             />
         <TextView
             android:id="@+id/bill_list_item_right_remark"
