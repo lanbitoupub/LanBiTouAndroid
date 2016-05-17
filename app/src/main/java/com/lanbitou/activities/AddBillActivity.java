@@ -130,7 +130,7 @@ public class AddBillActivity extends Activity {
         public void onDateChanged(DatePicker datePicker, int year, int month, int day) {
             Calendar cal = Calendar.getInstance();
             cal.set(year, month, day);
-            bill.setBillDate(cal.getTime());
+            bill.setBillDate(cal.getTime()); ;
         }
     }
 
