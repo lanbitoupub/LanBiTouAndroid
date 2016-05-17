@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import com.lanbitou.R;
 import com.lanbitou.activities.AddBillActivity;
@@ -40,7 +41,11 @@ import java.util.Objects;
  */
 public class BillFragment extends Fragment{
 
-    private Button addBillBtn;
+    private static int ADD_BILL_REQUEST_CODE = 1;
+
+    private Button toAddBillBtn;
+
+    BillListAdapter billListadapter;
 
     public BillFragment(){
 
@@ -50,13 +55,18 @@ public class BillFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_bill, container,false);
-        addBillBtn = (Button) view.findViewById(R.id.go_add_bill_btn);
 
-        addBillBtn.setOnClickListener(new View.OnClickListener() {
+        toAddBillBtn = (Button) view.findViewById(R.id.go_add_bill_btn);
+
+        //点击跳转到添加Bill的Activity
+        toAddBillBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getActivity(),AddBillActivity.class);
-                startActivity(i);
+                Intent i =
+                        new Intent(getActivity(),AddBillActivity.class);
+                i.putExtra("uid",1);    //传送必要的用户id给ACT,先模拟一下.
+                i.putExtra("folder","日常");
+                startActivityForResult(i,ADD_BILL_REQUEST_CODE);
             }
         });
 
@@ -72,11 +82,31 @@ public class BillFragment extends Fragment{
 
         billList.add(new Bill(1,1,"你猜",111,"天上很多鱼,","日常",new Date()));
 
-        ListAdapter adapter = new BillListAdapter(this.getActivity(),billList);
+        billListadapter = new BillListAdapter(this.getActivity(),billList);
 
         ListView list = (ListView) view.findViewById(R.id.bill_list);
-        list.setAdapter(adapter);
+        list.setAdapter(billListadapter);
         return view;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //Log.i("addBill","从addBill返回喽!");
+        if(requestCode == ADD_BILL_REQUEST_CODE){
+            if (resultCode == MainActivity.RESULT_OK){
+                //Log.i("addBill","返回的值也很对嘛!");
+                Bill newBill = (Bill) data.getSerializableExtra("newBill");
+                billListadapter.addItem(newBill);
+                billListadapter.notifyDataSetChanged();
+                Toast.makeText(getActivity(),
+                        "用户Id:" + newBill.getUid()
+                        + "\n消费类型:" + newBill.getType()
+                        + "\n多少钱" + newBill.getMoney()
+                        + "\n所在文件夹" + newBill.getFolder()
+                        + "\n时间" + newBill.getBillDate()
+                        + "\n备注" + newBill.getRemark(),
+                        Toast.LENGTH_LONG).show();
+            }
+        }
+    }
 }
