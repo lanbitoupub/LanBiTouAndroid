@@ -17,7 +17,7 @@ public class Bill implements Serializable{
     private Date billDate;           //账单时间,并非创建时间,由用户指定
 
     public Bill(){
-
+        billDate = new Date();
     }
 
     public Bill(int id, int uid, String type, double money, String remark, String folder, Date billDate) {

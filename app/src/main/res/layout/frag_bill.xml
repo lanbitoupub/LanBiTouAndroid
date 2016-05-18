@@ -9,7 +9,6 @@
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="wrap_content" />-->
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="20dp"
@@ -32,6 +31,14 @@
             android:gravity="center"
             />
     </LinearLayout>
+
+    <!--显示收支比例-->
+    <ProgressBar
+        android:id="@+id/inout_ratio_pb"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        />
+
     <ListView
         android:id="@+id/bill_list"
         android:layout_width="match_parent"
@@ -48,7 +55,7 @@
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:text="添加"
-        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="10px"
         />
 
 </LinearLayout>

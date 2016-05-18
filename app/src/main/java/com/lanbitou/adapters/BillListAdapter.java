@@ -2,6 +2,7 @@ package com.lanbitou.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,8 +89,9 @@ public class BillListAdapter extends BaseAdapter{
        //  = "我和很多人一同,漫游在无人知的原野上";
         StringBuilder sb = new StringBuilder(str);
         for(int i = 1; i < str.length(); i++){
-            sb.insert(i,"\n");
+            sb.insert(i + i - 1,"\n");
         }
+        Log.i("增加换行符",sb.toString());
         return sb.toString();
     }
 }
