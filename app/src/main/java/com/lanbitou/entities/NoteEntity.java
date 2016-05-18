@@ -1,6 +1,5 @@
 package com.lanbitou.entities;
 
-import java.util.Date;
 
 /**
  * Created by joyce on 16-5-11.
@@ -10,22 +9,25 @@ public class NoteEntity {
     private int uid;
     private String title;
     private String content;
+    private Boolean mark;
     private String notebook;
-    private Date created_at;
+    private String created_at;
 
     public NoteEntity() {
-
+        super();
     }
 
     public NoteEntity(String title) {
-        this(0, 0, title, null, null, null);
+        this(0, 0, title, null, null, null, null);
     }
 
-    public NoteEntity(int nid, int uid, String title, String content, String notebook, Date created_at) {
+
+    public NoteEntity(int nid, int uid, String title, String content, Boolean mark, String notebook, String created_at) {
         this.nid = nid;
         this.uid = uid;
         this.title = title;
         this.content = content;
+        this.mark = mark;
         this.notebook = notebook;
         this.created_at = created_at;
     }
@@ -62,6 +64,15 @@ public class NoteEntity {
         this.content = content;
     }
 
+    public Boolean getMark() {
+        return mark;
+    }
+
+    public void setMark(Boolean mark) {
+        this.mark = mark;
+    }
+
+
     public String getNotebook() {
         return notebook;
     }
@@ -70,11 +81,11 @@ public class NoteEntity {
         this.notebook = notebook;
     }
 
-    public Date getCreated_at() {
+    public String getCreated_at() {
         return created_at;
     }
 
-    public void setCreated_at(Date created_at) {
+    public void setCreated_at(String created_at) {
         this.created_at = created_at;
     }
 
