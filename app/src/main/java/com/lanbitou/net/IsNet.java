@@ -7,7 +7,9 @@ import android.net.NetworkInfo.State;
 import android.widget.Toast;
 
 /**
- * �����жϹ�����
+ *
+ * deprecated:检查网络是否连接
+ * author:joyce
  * */
 public class IsNet {
 

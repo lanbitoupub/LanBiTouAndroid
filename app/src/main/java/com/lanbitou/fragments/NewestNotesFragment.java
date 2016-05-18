@@ -19,6 +19,7 @@ import com.lanbitou.adapters.NoteAdapter;
 import com.lanbitou.entities.NoteEntity;
 import com.lanbitou.thread.HttpGetThread;
 import com.lanbitou.thread.ThreadPoolUtils;
+import com.lanbitou.util.FileUtil;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -40,13 +41,13 @@ public class NewestNotesFragment extends Fragment{
     private List<NoteEntity> listItems = new ArrayList<NoteEntity>();
     private Gson gson = new Gson();
     private Type listType = new TypeToken<List<NoteEntity>>() {}.getType();
+    private FileUtil fileUtil;
 
     Handler handler = new Handler() {
         public void handleMessage(Message msg)
         {
             switch (msg.what) {
                 case 0x123:
-
                     List<NoteEntity> newListItems = gson.fromJson((String) msg.obj, listType);
                     for(NoteEntity ne : newListItems) {
                         listItems.add(ne);
@@ -62,8 +63,6 @@ public class NewestNotesFragment extends Fragment{
         }
     };
 
-
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -73,6 +72,11 @@ public class NewestNotesFragment extends Fragment{
         listView = (ListView) view.findViewById(R.id.listview);
         noteAdapter = new NoteAdapter(this.getActivity(), listItems);
         listView.setAdapter(noteAdapter);
+
+        fileUtil = new FileUtil("/note/note.tou");
+        fileUtil.write("hello");
+        String s = fileUtil.read();
+        textView.setText(s);
 
 
         ThreadPoolUtils.execute(new HttpGetThread(handler, GETALL));

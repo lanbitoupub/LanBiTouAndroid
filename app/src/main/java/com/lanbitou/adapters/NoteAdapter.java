@@ -7,10 +7,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.lanbitou.R;
+import com.lanbitou.entities.NoteEntity;
+
 import java.util.List;
 
-import top.glimpse.lanbitou.R;
-import top.glimpse.lanbitou.entity.NoteEntity;
 
 /**
  * Created by joyce on 16-5-12.
