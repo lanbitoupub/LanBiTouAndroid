@@ -36,7 +36,10 @@
     <ProgressBar
         android:id="@+id/inout_ratio_pb"
         android:layout_width="match_parent"
-        android:layout_height="20dp"
+        android:layout_height="40dp"
+        android:max="100"
+        android:progress="40"
+        style="@style/mProgressHorizontal"
         />
 
     <ListView
@@ -53,9 +56,9 @@
     <Button
         android:id="@+id/go_add_bill_btn"
         android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:text="添加"
-        android:layout_marginBottom="10px"
+        android:layout_height="60dp"
+        android:text="@string/addNewBill"
+        android:layout_gravity="center_horizontal"
         />
 
 </LinearLayout>
