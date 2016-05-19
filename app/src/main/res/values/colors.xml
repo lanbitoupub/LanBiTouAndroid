@@ -7,6 +7,7 @@
     <color name="billListDividerColor">#fff</color>
     <color name="billListItemLeftColor">#fff</color>
     <color name="billListItemRightColor">#fff</color>
-    <color name="red">#d0f10707</color>
-    <color name="blue">#d4015fec</color>
+    <color name="billRed">#f13e07</color>
+    <color name="billBlue">#df01cdec</color>
+    <color name="yellow">#f9d802</color>
 </resources>

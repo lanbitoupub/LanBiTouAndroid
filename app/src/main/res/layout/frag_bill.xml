@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -10,9 +10,12 @@
         <!--android:layout_height="wrap_content" />-->
 
     <LinearLayout
+        android:id="@+id/bill_h2"
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:orientation="horizontal"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="0dp"
         >
         <TextView
             android:background="#e43a0b"
@@ -39,6 +42,7 @@
         android:layout_height="40dp"
         android:max="100"
         android:progress="40"
+        android:layout_below="@id/bill_h2"
         style="@style/mProgressHorizontal"
         />
 
@@ -50,15 +54,39 @@
         android:divider="@color/billListDividerColor"
         android:layout_marginTop="10dp"
         android:layout_weight="1"
+        android:layout_below="@id/inout_ratio_pb"
         >
     </ListView>
+    <LinearLayout
+        android:id="@+id/bill_operator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+        <TextView
+            android:id="@+id/show_folder_tv"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/show_folder_size"
+            android:clickable="true"
+            android:layout_marginLeft="10dp"
+            android:gravity="center"
+            />
 
-    <Button
-        android:id="@+id/go_add_bill_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="60dp"
-        android:text="@string/addNewBill"
-        android:layout_gravity="center_horizontal"
-        />
+        <Button
+            android:id="@+id/go_add_bill_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:text="@string/addNewBill"
+            android:layout_gravity="center_horizontal"
+            />
+    </LinearLayout>
 
-</LinearLayout>
+    <FrameLayout
+        android:id="@+id/bill_folder_fra"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp">
+    </FrameLayout>
+
+
+</RelativeLayout>
