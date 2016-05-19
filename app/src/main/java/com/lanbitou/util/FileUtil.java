@@ -14,22 +14,47 @@ import java.io.IOException;
  */
 public class FileUtil {
 
-    private String filename = "";
     private File path = null;
 
-    public FileUtil(String filename) {
-        this.filename = filename;
+    /**
+     * 所要操作文件相对于/mnt/sdcard/lanbitou路径
+     *
+     * 例如FileUtil("/note", "note.txt") 就对应于 /mnt/sdcard/lanbitou/note/note.txt
+     *
+     * @param filePath
+     * @param fileName
+     */
+    public FileUtil(String filePath, String fileName) {
 
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            String pathname = Environment.getExternalStorageDirectory().toString() + "/lanbitou" +filename;
-            path = new File(pathname);
+            String wholePath = Environment.getExternalStorageDirectory().toString() + "/lanbitou" +filePath;
+
+            File checkFilePath = new File(wholePath);
+            //检查路径是否存在
+            if(!checkFilePath.exists()){
+                checkFilePath.mkdirs();
+            }
+
+            //得到文件.
+            path = new File(checkFilePath,fileName);
+            try {
+                //检查文件是否存在
+                if(!path.exists()){
+                    path.createNewFile();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+           // Log.i("lanbitou","文件完整路径" + path);
         }
     }
 
-
+    /**
+     * 直接写要要读的文件名.
+     * @return
+     */
     public String read() {
         String result = "";
-
         if (path != null) {
             try {
                 BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(path));
@@ -54,6 +79,7 @@ public class FileUtil {
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(path);
             fileOutputStream.write(data.getBytes());
+            fileOutputStream.flush();       //清空缓存区
             fileOutputStream.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -61,7 +87,5 @@ public class FileUtil {
             e.printStackTrace();
         }
     }
-
-
 
 }
