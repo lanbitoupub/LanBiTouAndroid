@@ -4,18 +4,20 @@ package com.lanbitou.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.lanbitou.R;
 import com.lanbitou.entities.Bill;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 /**
  * 添加
@@ -30,7 +32,7 @@ public class AddBillActivity extends Activity {
     DatePicker datePicker;      //日期选择器
     EditText remarkEt;           //备注
     Button addBtn;              //添加按钮
-
+    TextView folderTv;
     Bill bill;
 
     boolean isIn = true;        //是不是收入
@@ -41,12 +43,12 @@ public class AddBillActivity extends Activity {
         setContentView(R.layout.activity_add_bill);
 
         bill = new Bill();
-
+        bill.setFolder(getIntent().getStringExtra("folder"));
+        Log.i("lanbitou",bill.getFolder());
         backImgBtn = (ImageButton) findViewById(R.id.add_bill_back_btn);
         backImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 finish();
             }
         });
@@ -74,6 +76,10 @@ public class AddBillActivity extends Activity {
         addBtn = (Button) findViewById(R.id.add_bill_btn);
         addBtn.setOnClickListener(new AddBtnClickListener());
 
+        folderTv = (TextView) findViewById(R.id.add_bill_show_folder_tv);
+
+        folderTv.setText(bill.getFolder());
+
 
     }
 
@@ -81,6 +87,7 @@ public class AddBillActivity extends Activity {
 
         @Override
         public void onCheckedChanged(RadioGroup radioGroup, int i) {
+            isIn = true;
             switch (i){
                 case R.id.add_bill_rb_in:
                     isIn = true;
@@ -97,12 +104,13 @@ public class AddBillActivity extends Activity {
         @Override
         public void onClick(View view) {
 
-            int uid = getIntent().getIntExtra("uid",0);
+            //int uid = getIntent().getIntExtra("uid",0);
             String type = typeEt.getText().toString();
             double money = Double.parseDouble(moneyEt.getText().toString());
             String remark = remarkEt.getText().toString();
             String folder = getIntent().getStringExtra("folder");
-            bill.setUid(uid);
+
+            //bill.setUid(uid);
             bill.setType(type);
 
             if(!isIn){
@@ -111,6 +119,7 @@ public class AddBillActivity extends Activity {
             bill.setMoney(money);
             bill.setFolder(folder);
             bill.setRemark(remark);
+            bill.setBillDate(getBillDate(datePicker));
 
             //返回账单数据到主Activity
             Intent toBillFragI = new Intent(AddBillActivity.this,MainActivity.class);
@@ -128,10 +137,24 @@ public class AddBillActivity extends Activity {
     private class BillDateChangedListener implements DatePicker.OnDateChangedListener {
         @Override
         public void onDateChanged(DatePicker datePicker, int year, int month, int day) {
-            Calendar cal = Calendar.getInstance();
-            cal.set(year, month, day);
-            bill.setBillDate(cal.getTime()); ;
         }
+    }
+
+    /**
+     * 获取当前的时间选择器上的时间.并格式化
+     * @param datePicker
+     * @return
+     */
+    private String getBillDate(DatePicker datePicker){
+        int year = datePicker.getYear();
+        int month = datePicker.getMonth();
+        int day = datePicker.getDayOfMonth();
+        Calendar cal = Calendar.getInstance();
+        cal.set(year, month, day);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String dateStr = format.format(cal.getTime());
+        Log.i("lanbitou","账单时间: " +dateStr);
+        return dateStr;
     }
 
 }

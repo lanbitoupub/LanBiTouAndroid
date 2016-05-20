@@ -8,6 +8,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by joyce on 16-5-18.
@@ -15,6 +17,7 @@ import java.io.IOException;
 public class FileUtil {
 
     private File path = null;
+    private File folderPath = null;
 
     /**
      * 所要操作文件相对于/mnt/sdcard/lanbitou路径
@@ -29,22 +32,25 @@ public class FileUtil {
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             String wholePath = Environment.getExternalStorageDirectory().toString() + "/lanbitou" +filePath;
 
-            File checkFilePath = new File(wholePath);
+            this.folderPath = new File(wholePath);
             //检查路径是否存在
-            if(!checkFilePath.exists()){
-                checkFilePath.mkdirs();
+            if(!folderPath.exists()){
+                folderPath.mkdirs();
+            }
+            //文件名补位空
+            if(fileName != null){
+                //得到文件.
+                path = new File(folderPath,fileName);
+                try {
+                    //检查文件是否存在
+                    if(!path.exists()){
+                        path.createNewFile();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
-            //得到文件.
-            path = new File(checkFilePath,fileName);
-            try {
-                //检查文件是否存在
-                if(!path.exists()){
-                    path.createNewFile();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
            // Log.i("lanbitou","文件完整路径" + path);
         }
     }
@@ -86,6 +92,19 @@ public class FileUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 获取某一目录下的所有文件的名字
+     * @return 存有文件的List
+     */
+    public List<String> getfileCount(){
+        List<String> nameList = new ArrayList<>();
+        String[] names = folderPath.list();
+        for(String n : names){
+            nameList.add(n);
+        }
+        return nameList;
     }
 
 }

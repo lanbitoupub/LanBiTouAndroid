@@ -27,13 +27,14 @@ import java.util.List;
 
 
 /**
+ *
  * Created by Henvealf on 16-5-13.
  */
 public class NewestNotesFragment extends Fragment{
 
-    private String POSTONE = "http://192.168.1.105:8080/lanbitou/note/postOne";
-    private String GETONE = "http://192.168.1.105:8080/lanbitou/note/getOne";
-    private String GETALL = "http://192.168.1.105:8080/lanbitou/note/getAll";
+    private String POSTONE = "http://10.0.2.2:8082/lanbitou/note/postOne";
+    private String GETONE = "http://10.0.2.2:8082/lanbitou/note/getOne";
+    private String GETALL = "http://10.0.2.2:8082/lanbitou/note/getAll";
 
     private TextView textView;
     private ListView listView;
@@ -73,7 +74,7 @@ public class NewestNotesFragment extends Fragment{
         noteAdapter = new NoteAdapter(this.getActivity(), listItems);
         listView.setAdapter(noteAdapter);
 
-        fileUtil = new FileUtil("/note/note.tou");
+        fileUtil = new FileUtil("/note/","note.tou");
         fileUtil.write("hello");
         String s = fileUtil.read();
         textView.setText(s);

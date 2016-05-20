@@ -6,5 +6,6 @@
         android:id="@+id/bill_folder_list_item_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="36dp"
         />
 </LinearLayout>
