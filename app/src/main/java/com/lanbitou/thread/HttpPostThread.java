@@ -5,6 +5,11 @@ import android.os.Message;
 
 import com.lanbitou.net.GetPostUtil;
 
+/**
+ * Post线程
+ * creat by joyce
+ */
+
 public class HttpPostThread implements Runnable{
 	
 	private Handler handler;
@@ -43,7 +48,7 @@ public class HttpPostThread implements Runnable{
 		}
 		
 		msg.what = 0x123;
-		msg.arg1 = 1;
+		msg.arg1 = 1;//表示是从网络获取的数据
 		msg.obj = result;
 		handler.sendMessage(msg);
 	}

@@ -30,6 +30,7 @@ public class HttpGetThread implements Runnable {
 		String result = GetPostUtil.doGet(url);
 		msg.what = 0x123;
 		msg.obj = result;
+		msg.arg1 = 1;
 		handler.sendMessage(msg);
 		
 	}
