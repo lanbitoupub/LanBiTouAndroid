@@ -38,6 +38,7 @@ public class ThreadPoolUtils {
 		}
 
 	};
+
 	private static ThreadPoolExecutor threadpool;
 	static {
 		threadpool = new ThreadPoolExecutor(CORE_POOL_SIZE, MAX_POOL_SIZE,
@@ -48,4 +49,5 @@ public class ThreadPoolUtils {
 	public static void execute(Runnable runnable) {
 		threadpool.execute(runnable);
 	}
+
 }

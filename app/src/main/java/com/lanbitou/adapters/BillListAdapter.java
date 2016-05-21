@@ -2,7 +2,6 @@ package com.lanbitou.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +11,7 @@ import android.widget.TextView;
 import com.lanbitou.R;
 import com.lanbitou.entities.Bill;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.Inflater;
 
 /**
  * 按照创建时间从近到往向下排列
@@ -28,7 +25,7 @@ public class BillListAdapter extends BaseAdapter{
 
     public BillListAdapter(Context context){
         this.context =context;
-        billList = new ArrayList<>();
+    //    billList = new ArrayList<>();
     }
 
     public BillListAdapter(Context context, List<Bill> billList){
@@ -36,8 +33,12 @@ public class BillListAdapter extends BaseAdapter{
         this.billList = billList;
     }
 
-    public void addItem(Bill bill){
-        billList.add(bill);
+    public void setBillList(List<Bill> billList){
+        this.billList = billList;
+    }
+
+    public void addItemToTop(Bill bill){
+        billList.add(0,bill);
     }
 
     @Override
@@ -91,7 +92,7 @@ public class BillListAdapter extends BaseAdapter{
         for(int i = 1; i < str.length(); i++){
             sb.insert(i + i - 1,"\n");
         }
-        Log.i("增加换行符",sb.toString());
+        //Log.i("增加换行符",sb.toString());
         return sb.toString();
     }
 }

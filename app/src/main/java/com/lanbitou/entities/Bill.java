@@ -1,7 +1,6 @@
 package com.lanbitou.entities;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * Created by Henvealf on 16-5-15.
@@ -14,13 +13,13 @@ public class Bill implements Serializable{
     private double money;            //收或支多少钱.
     private String remark;          //备注
     private String folder;           //所属的文件夹
-    private Date billDate;           //账单时间,并非创建时间,由用户指定
+    private String billDate;           //账单时间,并非创建时间,由用户指定
 
     public Bill(){
-        billDate = new Date();
+
     }
 
-    public Bill(int id, int uid, String type, double money, String remark, String folder, Date billDate) {
+    public Bill(int id, int uid, String type, double money, String remark, String folder, String billDate) {
         this.id = id;
         this.uid = uid;
         this.type = type;
@@ -70,11 +69,11 @@ public class Bill implements Serializable{
         return remark;
     }
 
-    public void setBillDate(Date billDate) {
+    public void setBillDate(String billDate) {
         this.billDate = billDate;
     }
 
-    public Date getBillDate() {
+    public String getBillDate() {
         return billDate;
     }
 
