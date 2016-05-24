@@ -11,10 +11,10 @@
     <string name="schedule">日程</string>
     <string name="setting">设置</string>
     <string name="last_synch_date">上次同时间</string>
-    <string name="addNewBill">添加新账单</string>
+    <string name="addNewBill">添加一条收支</string>
     <string name="in">收入</string>
     <string name="out">支出</string>
-    <string name="newBillFolder">新建账单夹</string>
+    <string name="newBillFolder">新建账单</string>
 
 
     <string name="addNote">添加笔记</string>
