@@ -9,6 +9,16 @@
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="wrap_content" />-->
 
+    <!--显示收支比例-->
+    <ProgressBar
+        android:id="@+id/inout_ratio_pb"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:max="100"
+        android:progress="40"
+        style="@style/mProgressHorizontal"
+        />
+
     <LinearLayout
         android:id="@+id/bill_h2"
         android:layout_width="match_parent"
@@ -16,6 +26,8 @@
         android:orientation="horizontal"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="0dp"
+        android:layout_below="@id/inout_ratio_pb"
+
         >
         <TextView
             android:background="#e43a0b"
@@ -26,7 +38,7 @@
             android:gravity="center"
             />
         <TextView
-            android:background="#0d05f2"
+            android:background="@color/billBlue"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -35,38 +47,20 @@
             />
     </LinearLayout>
 
-    <!--显示收支比例-->
-    <ProgressBar
-        android:id="@+id/inout_ratio_pb"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:max="100"
-        android:progress="40"
-        android:layout_below="@id/bill_h2"
-        style="@style/mProgressHorizontal"
-        />
 
-    <ListView
-        android:id="@+id/bill_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:dividerHeight="@dimen/bill_list_divider"
-        android:divider="@color/billListDividerColor"
-        android:layout_marginTop="10dp"
-        android:layout_below="@id/inout_ratio_pb"
-        >
-    </ListView>
-    <LinearLayout
+
+
+    <RelativeLayout
         android:id="@+id/bill_operator"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_alignParentBottom="true">
-        <TextView
-            android:id="@+id/show_folder_tv"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/show_folder_size"
-            android:clickable="true"
+
+        <ImageButton
+            android:id="@+id/show_folder_ib"
+            android:background="@drawable/bill_folder"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_marginLeft="10dp"
             android:gravity="center"
             />
@@ -76,15 +70,28 @@
             android:layout_width="wrap_content"
             android:layout_height="60dp"
             android:text="@string/addNewBill"
-            android:layout_gravity="center_horizontal"
+            android:layout_centerHorizontal="true"
             />
-    </LinearLayout>
+    </RelativeLayout>
 
+
+    <ListView
+        android:id="@+id/bill_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:dividerHeight="@dimen/bill_list_divider"
+        android:divider="@color/billListDividerColor"
+        android:layout_marginTop="10dp"
+        android:layout_above="@id/bill_operator"
+        android:layout_below="@id/bill_h2"
+        >
+    </ListView>
+<!--账单夹-->
     <FrameLayout
         android:id="@+id/bill_folder_fra"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="20dp">
+        >
     </FrameLayout>
 
 

@@ -25,6 +25,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="5dp"
         android:gravity="left|center"
+        android:maxLength="10"
         android:hint="名称" />
 
     <LinearLayout
