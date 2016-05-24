@@ -224,7 +224,9 @@ public class FileUtil {
         List<String> nameList = new ArrayList<>();
         String[] names = folderPath.list();
         for(String n : names){
-            nameList.add(n);
+            if(!n.equals(".tallyLastOperate")){             //排除临时文件夹
+                nameList.add(n);
+            }
         }
         return nameList;
     }
