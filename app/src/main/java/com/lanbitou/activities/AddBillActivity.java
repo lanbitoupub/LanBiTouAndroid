@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -25,7 +25,7 @@ import java.util.Calendar;
  */
 public class AddBillActivity extends Activity {
 
-    ImageButton backImgBtn;
+    ImageView backImgView;
     EditText typeEt;            //消费类型
     EditText moneyEt;           //多少钱
     RadioGroup inOutRg;         //收入还是支出
@@ -45,8 +45,8 @@ public class AddBillActivity extends Activity {
         bill = new Bill();
         bill.setFolder(getIntent().getStringExtra("folder"));
         Log.i("lanbitou",bill.getFolder());
-        backImgBtn = (ImageButton) findViewById(R.id.add_bill_back_btn);
-        backImgBtn.setOnClickListener(new View.OnClickListener() {
+        backImgView = (ImageView) findViewById(R.id.back);
+        backImgView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
