@@ -1,6 +1,7 @@
 package com.lanbitou.util;
 
 import android.os.Environment;
+import android.provider.DocumentsContract;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -151,6 +152,11 @@ public class FileUtil {
             nameList.add(n);
         }
         return nameList;
+    }
+
+    public static void delete(String path) {
+        File file = new File(root + path);
+        file.deleteOnExit();
     }
 
 }

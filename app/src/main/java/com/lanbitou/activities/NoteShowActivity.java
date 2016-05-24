@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -21,30 +22,39 @@ import com.lanbitou.util.FileUtil;
 
 public class NoteShowActivity extends AppCompatActivity {
 
+    private static final String TAG = "NoteShowActivity";
     private EditText title;
     private EditText content;
     private ImageView back;
     private ImageView ok;
+    private ImageView delete;
 
     private Gson gson = new Gson();
     private NoteEntity noteEntity;
+    private FileUtil postFileUtil = new FileUtil("/note", "/post.lan");
+    private FileUtil deleteFileUtil = new FileUtil("/note", "/delete.lan");
     private FileUtil fileUtil;
-    private FileUtil updateFileUtil;
+    private FileUtil updateFileUtil = new FileUtil("/note", "/update.lan");
 
     private Context context = this;
 
     private static String UPDATEONE = "http://192.168.1.105:8082/lanbitou/note/updateOne";
+    private String POSTONE = "http://192.168.1.105:8082/lanbitou/note/postOne";
+    private String DELETEONE = "http://192.168.1.105:8082/lanbitou/note/deleteOne";
+
     private String postJson = "";
+
+    private long itemid;
+    private boolean isNew = false;
+    private boolean isNew_result = false;
 
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
 
             switch (msg.what) {
-                case 0x123:
-
+                case 0x124://返回post数据
                     String result = (String) msg.obj;
-
                     Toast.makeText(context, result, Toast.LENGTH_LONG).show();
 
                     break;
@@ -67,20 +77,46 @@ public class NoteShowActivity extends AppCompatActivity {
         content = (EditText) findViewById(R.id.content);
         back = (ImageView) findViewById(R.id.back);
         ok = (ImageView) findViewById(R.id.ok);
+        delete = (ImageView) findViewById(R.id.delete);
 
         MyOnClickListener myOnClickListener = new MyOnClickListener();
         back.setOnClickListener(myOnClickListener);
         ok.setOnClickListener(myOnClickListener);
+        delete.setOnClickListener(myOnClickListener);
 
         Intent intent = getIntent();
         String neJson = intent.getStringExtra("neJson");
-        noteEntity = gson.fromJson(neJson, NoteEntity.class);
 
-        title.setText(noteEntity.getTitle());
-        content.setText(noteEntity.getContent());
+        if(isNew = intent.getBooleanExtra("isNew", false)) {
+            String result = "";
+            int id;
+            if((result = postFileUtil.read()).equals(""))  {
+                id = -1;
+            }
+            else {
+                Log.i(TAG, result);
+                id = Integer.valueOf(result);
+                id--;
+            }
 
-        fileUtil = new FileUtil("/note","/" + noteEntity.getNid() + ".lan");
-        updateFileUtil = new FileUtil("/note", "/update.lan");
+            noteEntity = new NoteEntity(id,1,1,"", "",false, null);
+            isNew_result = true;
+
+            fileUtil = new FileUtil("/note","/" + noteEntity.getNid() + ".lan");
+
+
+        } else {
+            itemid = intent.getLongExtra("itemid", -1);
+            noteEntity = gson.fromJson(neJson, NoteEntity.class);
+
+            title.setText(noteEntity.getTitle());
+            content.setText(noteEntity.getContent());
+
+            fileUtil = new FileUtil("/note","/" + noteEntity.getNid() + ".lan");
+            fileUtil.write(neJson);
+        }
+
+
 
     }
 
@@ -90,6 +126,12 @@ public class NoteShowActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.back:
+                    String newjson = gson.toJson(noteEntity);
+                    Intent intent = new Intent(context, MainActivity.class);
+                    intent.putExtra("isNew", isNew_result);
+                    intent.putExtra("itemid", itemid);
+                    intent.putExtra("newjson", newjson);
+                    setResult(100,intent);
                     finish();
                     break;
                 case R.id.ok:
@@ -98,13 +140,43 @@ public class NoteShowActivity extends AppCompatActivity {
                     postJson = gson.toJson(noteEntity);
                     fileUtil.write(postJson, false);
                     if (IsNet.isConnect(context)) {
-                        Toast.makeText(context, "update", Toast.LENGTH_LONG).show();
-                        ThreadPoolUtils.execute(new HttpPostThread(handler, UPDATEONE, postJson));
+
+                        if (isNew) {
+                            Toast.makeText(context, "post", Toast.LENGTH_LONG).show();
+                            ThreadPoolUtils.execute(new HttpPostThread(handler, POSTONE, postJson));
+                            isNew = false;
+                        } else {
+                            Toast.makeText(context, "update", Toast.LENGTH_LONG).show();
+                            ThreadPoolUtils.execute(new HttpPostThread(handler, UPDATEONE, postJson));
+                        }
                     }
                     else {
-                        Toast.makeText(context, "writeupdate", Toast.LENGTH_LONG).show();
-                        updateFileUtil.write(noteEntity.getNid() + "#", true);
+                        if (isNew) {
+                            postFileUtil.write(noteEntity.getNid() + "");
+                        } else {
+                            Toast.makeText(context, "writeupdate", Toast.LENGTH_LONG).show();
+                            updateFileUtil.write(noteEntity.getNid() + "#", true);
+                        }
+
                     }
+                    break;
+                case R.id.delete:
+                    postJson = gson.toJson(noteEntity);
+
+                    if (IsNet.isConnect(context)) {
+                        ThreadPoolUtils.execute(new HttpPostThread(handler, DELETEONE, postJson));
+                        FileUtil.delete("/note/" + noteEntity.getNid() + ".lan");
+                    } else {
+                        deleteFileUtil.write(noteEntity.getNid() + "#", true);
+                    }
+
+                    Intent deleteIntent = new Intent(context, MainActivity.class);
+                    deleteIntent.putExtra("isNew", isNew_result);
+                    deleteIntent.putExtra("isDelete", true);
+                    deleteIntent.putExtra("itemid", itemid);
+                    deleteIntent.putExtra("newjson", postJson);
+                    setResult(100,deleteIntent);
+                    finish();
                     break;
                 default:
                     break;

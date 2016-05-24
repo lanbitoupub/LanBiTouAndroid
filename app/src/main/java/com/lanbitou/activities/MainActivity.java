@@ -3,25 +3,38 @@ package com.lanbitou.activities;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.ArrayAdapter;
+import android.widget.PopupWindow;
+import android.widget.Toast;
 
 import com.lanbitou.R;
 import com.lanbitou.fragments.AllNotesFragment;
 import com.lanbitou.fragments.BillFragment;
 import com.lanbitou.fragments.NewestNotesFragment;
 import com.lanbitou.fragments.ScheduleFagment;
+
+import java.io.File;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -32,11 +45,18 @@ public class MainActivity extends AppCompatActivity
     //这是右下的小按钮
     FloatingActionButton fab;
 
+    private Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        //Intent intent = new Intent(this, LoginActivity.class);
+        //startActivity(intent);
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -53,12 +73,37 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.commit();
 
 
+        //添加按钮
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                String[] items = { "添加笔记", "添加账单" };
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(context)
+                        .setItems(items, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                switch (which) {
+                                    case 0:
+                                        Intent intent = new Intent(context, NoteShowActivity.class);
+                                        intent.putExtra("isNew", true);
+                                        startActivityForResult(intent, 1);
+                                        break;
+                                    case 1:
+
+
+                                        break;
+                                    default:
+                                        break;
+                                }
+
+                            }
+
+                        });
+
+                builder.create().show();
+
             }
         });
 
@@ -126,7 +171,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * 侧边栏的点击时间
+     * 侧边栏的点击事件
      * @param item
      * @return
      */
@@ -166,4 +211,14 @@ public class MainActivity extends AppCompatActivity
 
         return true;
     }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        fragments[0].onActivityResult(requestCode, resultCode, data);
+
+    }
+
 }

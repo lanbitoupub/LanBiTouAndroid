@@ -47,7 +47,7 @@ public class HttpPostThread implements Runnable{
 			result = GetPostUtil.doPost(url, value);
 		}
 		
-		msg.what = 0x123;
+		msg.what = 0x124;//表示post请求
 		msg.arg1 = 1;//表示是从网络获取的数据
 		msg.obj = result;
 		handler.sendMessage(msg);

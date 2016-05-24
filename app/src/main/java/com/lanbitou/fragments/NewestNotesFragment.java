@@ -24,7 +24,9 @@ import com.lanbitou.adapters.NoteAdapter;
 import com.lanbitou.entities.NoteEntity;
 import com.lanbitou.net.IsNet;
 import com.lanbitou.thread.HttpGetThread;
+import com.lanbitou.thread.HttpPostThread;
 import com.lanbitou.thread.ThreadPoolUtils;
+import com.lanbitou.util.ArrayUtil;
 import com.lanbitou.util.FileUtil;
 
 import java.lang.reflect.Type;
@@ -43,6 +45,8 @@ public class NewestNotesFragment extends Fragment{
     private String GETONE = "http://192.168.1.105:8082/lanbitou/note/getOne";
     private String GETALL = "http://192.168.1.105:8082/lanbitou/note/getAll";
     private String UPDATEALL = "http://192.168.1.105:8082/lanbitou/note/updateAll";
+    private String DELETEALL = "http://192.168.1.105:8082/lanbitou/note/deleteAll";
+    private String POSTALL = "http://192.168.1.105:8082/lanbitou/note/postAll";
 
     private TextView textView;
     private ListView listView;
@@ -50,9 +54,10 @@ public class NewestNotesFragment extends Fragment{
     private List<NoteEntity> listItems = new ArrayList<NoteEntity>();
     private Gson gson = new Gson();
     private Type listType = new TypeToken<List<NoteEntity>>() {}.getType();
-    private FileUtil fileUtil;
-    private FileUtil updateFileUtil;
-    private List<NoteEntity> updateNoteEntity = new ArrayList<NoteEntity>();
+    private FileUtil fileUtil = new FileUtil("/note", "/note.lan");
+    private FileUtil updateFileUtil = new FileUtil("/note", "/update.lan");
+    private FileUtil postFileUtil = new FileUtil("/note", "/post.lan");
+    private FileUtil deleteFileUtil = new FileUtil("/note", "/delete.lan");
     private NoteEntity oneEntity;
 
 
@@ -60,13 +65,12 @@ public class NewestNotesFragment extends Fragment{
         public void handleMessage(Message msg)
         {
             switch (msg.what) {
-                case 0x123://返回网络数据
-
+                case 0x123://返回get数据
                     String json = (String) msg.obj;
-                    if(json != null && !json.equals("")) {
+                    if(json != null && !json.equals("")) {//返回get请求
                         if (msg.arg1 == 1) {
                             listItems.clear();
-                            fileUtil.write(json, false);
+                            fileUtil.write(json);
                         }
 
                         List<NoteEntity> newListItems = gson.fromJson(json, listType);
@@ -77,8 +81,23 @@ public class NewestNotesFragment extends Fragment{
                         noteAdapter.notifyDataSetChanged();
                     }
                     break;
-                case 0x456:
-                    Toast.makeText(getActivity(), (String) msg.obj, Toast.LENGTH_LONG).show();
+                case 0x124://返回post数据
+                    String result = (String) msg.obj;
+                    if (result.equals("updateOne")) {//返回updateOne请求
+
+                    }
+                    else if (result.equals("updateAll")) {//返回updateAll请求
+                        //清空update.lan文件
+                        updateFileUtil.write("");
+                    }
+                    else if (result.equals("postAll")) {
+                        postFileUtil.write("");
+
+                    }
+                    else if (result.equals("deleteAll")) {
+                        deleteFileUtil.write("");
+
+                    }
                     break;
                 default:
                     break;
@@ -103,18 +122,6 @@ public class NewestNotesFragment extends Fragment{
 
 
 
-        if (IsNet.isConnect(getActivity())) {
-            Toast.makeText(getActivity(), "能连上", Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(getActivity(), "连不上", Toast.LENGTH_LONG).show();
-        }
-
-
-
-
-
-        fileUtil = new FileUtil("/note", "/note.lan");
-        updateFileUtil = new FileUtil("/note", "/update.lan");
         String result = "";
         if(!(result = fileUtil.read()).equals("")) {
             Message msg = new Message();
@@ -148,8 +155,10 @@ public class NewestNotesFragment extends Fragment{
 
                 Intent intent = new Intent(getActivity(), NoteShowActivity.class);
                 String neJson= gson.toJson(ne);
+                intent.putExtra("isNew", false);
                 intent.putExtra("neJson",neJson);
-                startActivity(intent);
+                intent.putExtra("itemid", id);
+                startActivityForResult(intent, 1);
             }
         });
 
@@ -158,38 +167,126 @@ public class NewestNotesFragment extends Fragment{
     }
 
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1 && resultCode == 100) {
+            boolean isNew = data.getBooleanExtra("isNew", false);
+            boolean isDelete = data.getBooleanExtra("isDelete", false);
+            Log.i("tag",isNew+"");
+            long itemid = data.getLongExtra("itemid", -1);
+            String newjson = data.getStringExtra("newjson");
+            NoteEntity newNoteEntity = gson.fromJson(newjson, NoteEntity.class);
+
+            if (isNew) {
+                listItems.add(newNoteEntity);
+            }
+            else if (isDelete) {
+                listItems.remove((int)itemid);
+            }
+            else {
+                listItems.remove((int)itemid);
+                listItems.add((int)itemid, newNoteEntity);
+            }
+
+            fileUtil.write(gson.toJson(listItems, listType));
+            noteAdapter.notifyDataSetChanged();
+        }
+
+    }
+
     private void refresh() {
 
         if (IsNet.isConnect(getActivity())) {
             ThreadPoolUtils.execute(new HttpGetThread(handler, GETALL));
+
+            checkCache();
         }
 
 
+    }
+
+    private void checkCache() {
+
         //检查是否有断网时未同步的文件
+
+        //检查修改的文件
         String update = "";
         if (!(update = updateFileUtil.read()).equals("")) {
 
             Log.i("TAG",update);
-            Toast.makeText(getActivity(), update, Toast.LENGTH_LONG).show();
+
             String[] updateid = update.split("#");
             int[] id = new int[updateid.length];
             for(int i = 0;i < updateid.length;i++) {
                 id[i] = Integer.valueOf(updateid[i]);
             }
 
-            for(int i = 0; i < id.length; i++) {
-                oneEntity = gson.fromJson(FileUtil.read("/note/" +  id[i] + ".lan"), NoteEntity.class);
+            int[] finalid = ArrayUtil.removeSame(id);
+            List<NoteEntity> updateNoteEntity = new ArrayList<NoteEntity>();
+            Toast.makeText(getActivity(), finalid.length + "", Toast.LENGTH_SHORT).show();
+
+            for(int i : finalid) {
+                oneEntity = gson.fromJson(FileUtil.read("/note/" +  i + ".lan"), NoteEntity.class);
                 updateNoteEntity.add(oneEntity);
             }
 
-            //清空update.lan文件
-            updateFileUtil.write("",false);
-            //ThreadPoolUtils.execute(new HttpGetThread(handler, GETALL));
+            String param = gson.toJson(updateNoteEntity, listType);
 
-
-
+            //发送更新
+            ThreadPoolUtils.execute(new HttpPostThread(handler, UPDATEALL, param));
         }
 
+
+        //检查删除的文件
+        String delete = "";
+        if (!(delete = deleteFileUtil.read()).equals("")) {
+
+            Log.i("TAG",delete);
+
+            String[] deleteid = delete.split("#");
+            int[] id = new int[deleteid.length];
+            for(int i = 0;i < deleteid.length;i++) {
+                id[i] = Integer.valueOf(deleteid[i]);
+            }
+
+            int[] finalid = ArrayUtil.removeSame(id);
+            List<NoteEntity> deleteNoteEntity = new ArrayList<NoteEntity>();
+            Toast.makeText(getActivity(), finalid.length + "", Toast.LENGTH_SHORT).show();
+
+            for(int i : finalid) {
+                oneEntity = gson.fromJson(FileUtil.read("/note/" +  i + ".lan"), NoteEntity.class);
+                deleteNoteEntity.add(oneEntity);
+            }
+
+            String param = gson.toJson(deleteNoteEntity, listType);
+
+            //发送更新
+            ThreadPoolUtils.execute(new HttpPostThread(handler, DELETEALL, param));
+        }
+
+
+        //检查添加的文件
+        String post = "";
+        if (!(post = postFileUtil.read()).equals("")) {
+
+            Log.i("TAG",post);
+
+
+            List<NoteEntity> postNoteEntity = new ArrayList<NoteEntity>();
+            int id = Integer.valueOf(post);
+
+            for(int i = -1; i >= id ;i--) {
+                oneEntity = gson.fromJson(FileUtil.read("/note/" +  i + ".lan"), NoteEntity.class);
+                postNoteEntity.add(oneEntity);
+            }
+
+            String param = gson.toJson(postNoteEntity, listType);
+
+            //发送更新
+            ThreadPoolUtils.execute(new HttpPostThread(handler, POSTALL, param));
+        }
 
     }
 }

@@ -28,7 +28,7 @@ public class HttpGetThread implements Runnable {
 	public void run() {
 
 		String result = GetPostUtil.doGet(url);
-		msg.what = 0x123;
+		msg.what = 0x123;//表示get请求
 		msg.obj = result;
 		msg.arg1 = 1;
 		handler.sendMessage(msg);
