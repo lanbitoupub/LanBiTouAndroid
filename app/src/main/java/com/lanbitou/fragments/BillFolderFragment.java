@@ -87,10 +87,8 @@ public class BillFolderFragment extends Fragment
         return false;
     }
 
-
-
     /**
-     * 该借口需要在Activity中实现,以Activity为媒介,实现碎片之间的数据传递
+     * 该接口需要在Activity中实现,以Activity为媒介,实现碎片之间的数据传递
      */
     public interface OnFragmentReturnListener{
         /**
@@ -122,8 +120,6 @@ public class BillFolderFragment extends Fragment
                     }else {
                         Toast.makeText(getActivity(),"不能为空",Toast.LENGTH_SHORT).show();
                     }
-
-
                 }
             });
 
@@ -135,9 +131,8 @@ public class BillFolderFragment extends Fragment
                 }
             });
             addFolderDialog.show();
-
-
-
         }
     }
+
+
 }
