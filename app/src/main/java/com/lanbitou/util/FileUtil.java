@@ -1,7 +1,6 @@
 package com.lanbitou.util;
 
 import android.os.Environment;
-import android.provider.DocumentsContract;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -9,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -110,6 +110,81 @@ public class FileUtil {
         return result;
     }
 
+    /**
+     * 根据名字读取,此时FileUtil的第二个构造参数需为null
+     * @param fileName
+     * @return
+     */
+    public String readByFileName(String fileName){
+        String result = "";
+        //文件名补位空
+        File newPath = null;
+        if(fileName != null){
+            //得到文件.
+            newPath = new File(folderPath,fileName);
+            try {
+                //检查文件是否存在
+                if(!newPath.exists()){
+                    newPath.createNewFile();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (newPath != null) {
+            try {
+                BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(newPath));
+                byte[] bytes = new byte[1024];
+                int count;
+                while((count = inputStream.read(bytes)) != -1)
+                {
+                    result += new String(bytes, 0, count);
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 向json List文件中追加新的item
+     * @param jsonStr
+     */
+    public void appendToJsonListTop(String jsonStr) {
+        RandomAccessFile ra = null;
+        try {
+            ra = new RandomAccessFile(path,"rw");
+            long fileLength = ra.length();
+            StringBuilder sb = new StringBuilder(jsonStr);
+            if(fileLength == 0){            //开始时文件内容为空
+                sb.insert(0,'[');
+                sb.append(']');
+                jsonStr = sb.toString();
+            }else{                          //不为空,在前面添加,分割符
+                sb.insert(0,',');
+                sb.append(']');
+                jsonStr = sb.toString();
+                ra.seek(fileLength-1);
+            }
+            ra.write(jsonStr.getBytes());
+            ra.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                ra.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void write(String data) {
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(path);
@@ -157,6 +232,13 @@ public class FileUtil {
     public static void delete(String path) {
         File file = new File(root + path);
         file.deleteOnExit();
+    }
+
+    /**
+     * 清空文件中的数据
+     */
+    public void emptyFileContent(){
+        this.write("");
     }
 
 }
