@@ -154,7 +154,7 @@ public class FileUtil {
      * 向json List文件中追加新的item
      * @param jsonStr
      */
-    public void appendToJsonListTop(String jsonStr) {
+    public void appendToJsonListTail(String jsonStr) {
         RandomAccessFile ra = null;
         try {
             ra = new RandomAccessFile(path,"rw");
@@ -220,7 +220,7 @@ public class FileUtil {
      * 获取某一目录下的所有文件的名字
      * @return 存有文件的List
      */
-    public List<String> getfileCount(){
+    public List<String> getInterFileName(){
         List<String> nameList = new ArrayList<>();
         String[] names = folderPath.list();
         for(String n : names){
