@@ -4,6 +4,7 @@
     <!-- background -->
     <item
         android:id="@android:id/background"
+        android:drawable="@color/billBlue"
         >
 
     </item>
@@ -15,6 +16,9 @@
                 <gradient
                     android:angle="90.0"
                     android:centerY="0.45"
+                    android:centerColor="@color/billRed"
+                    android:endColor="@color/billRed"
+                    android:startColor="@color/billRed"
                     />
             </shape>
         </clip>
