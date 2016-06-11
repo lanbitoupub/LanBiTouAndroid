@@ -2,6 +2,7 @@ package com.lanbitou.activities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -35,7 +36,10 @@ public class LoginActivity extends AppCompatActivity {
     private Gson gson = new Gson();
 
     private Context context = this;
-    private String LOGIN = "http://192.168.1.105:8082/lanbitou/user/login";
+    private String LOGIN = "http://192.168.1.108:8082/lanbitou/user/login";
+
+    SharedPreferences preferences;
+    SharedPreferences.Editor editor;
 
     private Handler handler = new Handler() {
 
@@ -46,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
                 case 0x124://返回post数据
                     String result = (String) msg.obj;
                     if (result != null && !result.equals("")) {
-                        onLoginSuccess();
+                        onLoginSuccess(result);
                     }
                     else {
                         onLoginFailed();
@@ -75,6 +79,9 @@ public class LoginActivity extends AppCompatActivity {
         _passwordText = (EditText) findViewById(R.id.input_password);
         _loginButton = (Button) findViewById(R.id.btn_login);
         _signupLink = (TextView) findViewById(R.id.link_signup);
+
+        preferences = getSharedPreferences("lanbitou", MODE_PRIVATE);
+        editor = preferences.edit();
 
         _loginButton.setOnClickListener(new View.OnClickListener() {
 
@@ -152,8 +159,13 @@ public class LoginActivity extends AppCompatActivity {
         moveTaskToBack(true);
     }
 
-    public void onLoginSuccess() {
+    public void onLoginSuccess(String result) {
 
+        UserEntity user = gson.fromJson(result, UserEntity.class);
+
+        editor.putString("user", result);
+        editor.putInt("uid", user.getUid());
+        editor.commit();
 
         _loginButton.setEnabled(true);
         finish();

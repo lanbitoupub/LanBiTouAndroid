@@ -41,12 +41,12 @@ import java.util.TimerTask;
  */
 public class NewestNotesFragment extends Fragment{
 
-    private String POSTONE = "http://192.168.1.105:8082/lanbitou/note/postOne";
-    private String GETONE = "http://192.168.1.105:8082/lanbitou/note/getOne";
-    private String GETALL = "http://192.168.1.105:8082/lanbitou/note/getAll";
-    private String UPDATEALL = "http://192.168.1.105:8082/lanbitou/note/updateAll";
-    private String DELETEALL = "http://192.168.1.105:8082/lanbitou/note/deleteAll";
-    private String POSTALL = "http://192.168.1.105:8082/lanbitou/note/postAll";
+    private String POSTONE = "http://192.168.1.108:8082/lanbitou/note/postOne";
+    private String GETONE = "http://192.168.1.108:8082/lanbitou/note/getOne";
+    private String GETALL = "http://192.168.1.108:8082/lanbitou/note/getAll";
+    private String UPDATEALL = "http://192.168.1.108:8082/lanbitou/note/updateAll";
+    private String DELETEALL = "http://192.168.1.108:8082/lanbitou/note/deleteAll";
+    private String POSTALL = "http://192.168.1.108:8082/lanbitou/note/postAll";
 
     private TextView textView;
     private ListView listView;

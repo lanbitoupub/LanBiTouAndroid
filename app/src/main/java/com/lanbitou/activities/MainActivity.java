@@ -6,6 +6,7 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -45,6 +46,9 @@ public class MainActivity extends AppCompatActivity
     //这是右下的小按钮
     FloatingActionButton fab;
 
+    private SharedPreferences preferences;
+
+
     private Context context = this;
 
     @Override
@@ -52,9 +56,13 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        //Intent intent = new Intent(this, LoginActivity.class);
-        //startActivity(intent);
+        //如果没uid就进入登陆
+        preferences = getSharedPreferences("lanbitou", MODE_PRIVATE);
+        int uid = preferences.getInt("uid", 0);
+        if (uid == 0) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

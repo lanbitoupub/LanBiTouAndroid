@@ -2,6 +2,7 @@ package com.lanbitou.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -38,15 +39,17 @@ public class NoteShowActivity extends AppCompatActivity {
 
     private Context context = this;
 
-    private static String UPDATEONE = "http://192.168.1.105:8082/lanbitou/note/updateOne";
-    private String POSTONE = "http://192.168.1.105:8082/lanbitou/note/postOne";
-    private String DELETEONE = "http://192.168.1.105:8082/lanbitou/note/deleteOne";
+    private static String UPDATEONE = "http://192.168.1.108:8082/lanbitou/note/updateOne";
+    private String POSTONE = "http://192.168.1.108:8082/lanbitou/note/postOne";
+    private String DELETEONE = "http://192.168.1.108:8082/lanbitou/note/deleteOne";
 
     private String postJson = "";
 
     private long itemid;
     private boolean isNew = false;
     private boolean isNew_result = false;
+
+    private SharedPreferences preferences;
 
     Handler handler = new Handler() {
         @Override
@@ -116,6 +119,12 @@ public class NoteShowActivity extends AppCompatActivity {
             fileUtil.write(neJson);
         }
 
+//        preferences = getSharedPreferences("lanbitou", MODE_PRIVATE);
+//
+//        String user = preferences.getString("user", null);
+//        int uid = preferences.getInt("uid", 0);
+//
+//        Toast.makeText(this, user + "::" + uid, Toast.LENGTH_LONG).show();
 
 
     }
