@@ -10,18 +10,19 @@ import android.widget.EditText;
 import com.lanbitou.R;
 
 /**
- * 添加文件夹用的对话框
+ * 带有编辑框的对话框
  * Created by Henvealf on 16-5-20.
  */
-public class AddFolderDialog extends Dialog{
+public class EditDialog extends Dialog{
 
     private EditText folderNameEt;
     private Button finishBtn, cancelBtn;
 
-    public AddFolderDialog(Context context) {
+    public EditDialog(Context context) {
         super(context);
         setFolderDialog();
     }
+
 
     private void setFolderDialog(){
         LayoutInflater inflater = LayoutInflater.from(getContext());
@@ -30,6 +31,14 @@ public class AddFolderDialog extends Dialog{
         finishBtn = (Button) view.findViewById(R.id.finish_btn);
         cancelBtn = (Button) view.findViewById(R.id.cancel_btn);
         super.setContentView(view);
+    }
+
+    /**
+     * 设置原本的字符串
+     * @param oldText
+     */
+    public void setOldText(String oldText){
+        folderNameEt.setText(oldText);
     }
 
     public EditText getTextEdite(){

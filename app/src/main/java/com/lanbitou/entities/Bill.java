@@ -14,9 +14,10 @@ public class Bill implements Serializable{
     private String remark;          //备注
     private String folder;           //所属的文件夹
     private String billDate;           //账单时间,并非创建时间,由用户指定
+    private boolean inClouded;      //是否同步
 
     public Bill(){
-
+        inClouded = true;
     }
 
     public Bill(int id, int uid, String type, double money, String remark, String folder, String billDate) {
@@ -27,6 +28,7 @@ public class Bill implements Serializable{
         this.remark = remark;
         this.folder = folder;
         this.billDate = billDate;
+        inClouded = true;
     }
 
     public int getId() {
@@ -85,4 +87,11 @@ public class Bill implements Serializable{
         this.folder = folder;
     }
 
+    public boolean isInClouded() {
+        return inClouded;
+    }
+
+    public void setInClouded(boolean inClouded) {
+        this.inClouded = inClouded;
+    }
 }

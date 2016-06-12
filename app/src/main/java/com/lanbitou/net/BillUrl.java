@@ -6,7 +6,7 @@ package com.lanbitou.net;
  */
 public class BillUrl {
 
-    public final static String ROOT_URL = "http://192.168.1.100:8082/lanbitou";
+    public final static String ROOT_URL = "http://192.168.1.105:8082/lanbitou";
 
     public final static String ADD_ONE_BILL_URL =
             ROOT_URL + "/bill/addOne";
@@ -15,14 +15,14 @@ public class BillUrl {
 
 
     public final static String DELETE_ONE_BILL_URL =
-            ROOT_URL + "/bill/deleteOne";
+            ROOT_URL + "/bill/deleteById";
     public final static String DELETE_SOME_BILLS_URL =
             ROOT_URL + "/bill/deleteSome";
 
     public final static String UPDATE_ONE_BILL_URL =
-            ROOT_URL + "/bill/updateOne";
+            ROOT_URL + "/bill/updateOneBill";
     public final static String UPDATE_SOME_BILLS_URL =
-            ROOT_URL + "/bill/updateSome";
+            ROOT_URL + "/bill/updateSomeBill";
 
     public final static String GET_ONE_BY_ID =
             ROOT_URL + "/bill/getOne";
@@ -34,4 +34,12 @@ public class BillUrl {
     public static final String ADD_ONE_FOLDER =
                             BillUrl.ROOT_URL  + "/bill/addOneFolder";
 
+    public static final String UPDATE_FOLDER =
+            BillUrl.ROOT_URL  + "/bill/updateOneFolder";
+
+    public static final String ADD_SOME_BILLS_FOLDER_URL =
+                            BillUrl.ROOT_URL  + "/bill/addSomeFolder";
+
+    public static final String DELETE_SOME_BILLS_FOLDER_URL =
+                            BillUrl.ROOT_URL + "/bill/deleteByFolder";
 }

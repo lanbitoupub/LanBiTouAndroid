@@ -16,6 +16,7 @@ public class HttpPostThread implements Runnable{
 	private String url = null;
 	private String value;
 	private String img = "";
+	int what = 0x124;
 	Message msg = new Message();
 	
 	public HttpPostThread(Handler handler, String url, String value)
@@ -32,7 +33,13 @@ public class HttpPostThread implements Runnable{
 		this.value = value;
 		this.img = img;
 	}
-	
+	public HttpPostThread(Handler handler, String url, String value, int what)
+	{
+		this.handler = handler;
+		this.url = url;
+		this.value = value;
+		this.what = what;
+	}
 
 	@Override
 	public void run() {
@@ -47,7 +54,7 @@ public class HttpPostThread implements Runnable{
 			result = GetPostUtil.doPost(url, value);
 		}
 		
-		msg.what = 0x124;//表示post请求
+		msg.what = what;//表示post请求
 		msg.arg1 = 1;//表示是从网络获取的数据
 		msg.obj = result;
 		handler.sendMessage(msg);

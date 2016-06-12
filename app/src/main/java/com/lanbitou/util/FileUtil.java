@@ -57,6 +57,9 @@ public class FileUtil {
         }
     }
 
+    public FileUtil(String filePath){
+        this( filePath, null );
+    }
     /**
      * 直接写要要读的文件名.
      * @return
@@ -236,11 +239,54 @@ public class FileUtil {
         file.deleteOnExit();
     }
 
+    public void ldelete(String fileName){
+        File file = new File(folderPath,fileName);
+        file.delete();
+    }
+
+    /**
+     * 文件更名
+     * @param newName
+     * @return 返回更名消息 null说明更名成功
+     */
+    public synchronized String rename(String oldName,String newName){
+        if(!oldName.equals(newName)){            //新的文件名和以前文件名不同时,才有必要进行重命名
+
+            File oldFile = new File(folderPath+"/"+oldName);
+            File newFile = new File(folderPath+"/"+newName);
+
+            if(!oldFile.exists()){                //重命名文件不存在
+                return "要重命名的账单不存在";
+            } else if (newFile.exists()) {        //若在该目录下已经有一个文件和新文件名相同，则不允许重命名
+                return "已经存在同名账单";
+            } else {
+                oldFile.renameTo(newFile);
+                oldFile.delete();
+                return null;
+            }
+        } else {
+            return "账单名字未做改变";
+        }
+    }
+
+
+    /**
+     * 判断文件是否存在
+     * @param fileName
+     * @return
+     */
+    public boolean isExists(String fileName){
+        File file = new File(folderPath + "/" +fileName);
+        return file.exists();
+    }
+
     /**
      * 清空文件中的数据
      */
     public void emptyFileContent(){
         this.write("");
     }
+
+
 
 }

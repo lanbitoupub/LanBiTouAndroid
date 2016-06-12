@@ -7,6 +7,17 @@ package com.lanbitou.entities;
 public class BillFolder {
     private int uid;
     private String name;
+    private boolean inClouded;
+
+    public BillFolder(){
+        this.inClouded = true;
+    }
+
+    public BillFolder(int uid,String name) {
+        this.name = name;
+        this.uid = uid;
+        this.inClouded = true;
+    }
 
     public int getUid() {
         return uid;
@@ -22,5 +33,13 @@ public class BillFolder {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isInClouded() {
+        return inClouded;
+    }
+
+    public void setInClouded(boolean inClouded) {
+        this.inClouded = inClouded;
     }
 }

@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    
-    <!--<com.lanbitou.views.RatioBar-->
-        <!--android:id="@+id/bill_top_ratio"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content" />-->
 
     <!--显示收支比例-->
     <ProgressBar
@@ -19,13 +15,35 @@
         style="@style/mProgressHorizontal"
         />
 
+    <!--显示钱数-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        >
+        <TextView
+            android:id="@+id/in_money_tv"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="123"/>
+        <TextView
+            android:id="@+id/out_money_tv"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|right"
+            android:text="123"/>
+    </LinearLayout>
+
     <LinearLayout
         android:id="@+id/bill_h2"
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:orientation="horizontal"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="0dp"
+        android:layout_marginTop="3dp"
         android:layout_below="@id/inout_ratio_pb"
 
         >

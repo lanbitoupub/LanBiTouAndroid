@@ -9,8 +9,10 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.lanbitou.R;
+import com.lanbitou.entities.BillFolder;
 import com.lanbitou.util.FileUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,28 +20,28 @@ import java.util.List;
  */
 public class BillFolderAdapter extends BaseAdapter{
 
-    private List<String> folderNameList ;
+    private List<BillFolder> folderList ;
     private Context context;
 
 
     public BillFolderAdapter(Context context){
         this.context = context;
-        setFolderNameList();
+        setFolderList();
     }
 
-    public void addItem(String newFolder){
-        folderNameList.add(newFolder);
+    public void addItem(BillFolder newFolder){
+        folderList.add(newFolder);
 
     }
 
     @Override
     public int getCount() {
-        return folderNameList.size();
+        return folderList.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return folderNameList.get(i);
+        return folderList.get(i);
     }
 
     @Override
@@ -56,23 +58,27 @@ public class BillFolderAdapter extends BaseAdapter{
         }else{
             listItemView = view;
         }
-
         TextView tv = (TextView) listItemView.findViewById(R.id.bill_folder_list_item_tv);
-        tv.setText(folderNameList.get(i));
+        tv.setText(folderList.get(i).getName());
         return listItemView;
     }
 
     /**
      * 设置文件List
      */
-    private void setFolderNameList(){
+    public void setFolderList(){
 
         //获取uid
         int uid = 1;
-        FileUtil fileUtil = new FileUtil("/bill/" + uid, null);
-
-        folderNameList = fileUtil.getfileCount();
-
+        FileUtil fileUtil = new FileUtil("/bill/" + uid);
+        folderList = new ArrayList<>();
+        List<String> folderNameList = fileUtil.getInterFileName();
+        for(int i = 0; i < folderNameList.size(); i ++){
+            BillFolder df = new BillFolder();
+            df.setUid(uid);
+            df.setName(folderNameList.get(i));
+            folderList.add(df);
+        }
         Log.i("lanbitou", "/bill下的文件数为" + folderNameList.size());
     }
 }
