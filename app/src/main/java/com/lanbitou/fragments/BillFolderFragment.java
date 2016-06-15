@@ -2,7 +2,9 @@ package com.lanbitou.fragments;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -50,7 +52,7 @@ public class BillFolderFragment extends Fragment
     private OnFragmentReturnListener mListener;
     private Button addFolderBtn;
     private BillFolderAdapter billFolderAdapter;
-    private int uid = 1;
+    private int uid = -1;
 
     Gson gson;
 
@@ -68,12 +70,22 @@ public class BillFolderFragment extends Fragment
 
     }
 
+    public BillFolderFragment(){
+
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_bill_folder,container,false);
+        //TODO uid每次都要获取一遍,待解决.
+        //获取uid
+        SharedPreferences sharedPreferences =
+                getActivity().getSharedPreferences("lanbitou", Context.MODE_PRIVATE);
+        uid = sharedPreferences.getInt("uid",-1);
+
         listView = (ListView) view.findViewById(R.id.bill_folder_lv);
-        billFolderAdapter = new BillFolderAdapter(getActivity());
+        billFolderAdapter = new BillFolderAdapter(getActivity(),uid);
         listView.setAdapter(billFolderAdapter);
 
         listView.setOnItemClickListener(this);
@@ -178,8 +190,6 @@ public class BillFolderFragment extends Fragment
                                     case 1:                     //删除
                                         confirmDialog(position);
                                         break;
-                                    default:
-                                        break;
                                 }
                             }
                         });
@@ -259,19 +269,7 @@ public class BillFolderFragment extends Fragment
     Handler postFolderHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case 0x124:         //添加
-                    checkSynch(msg);
-                    break;
-                case 0x126:
-                    checkSynch(msg);//删除
-                    break;
-                case 0x128:         //修改
-                    checkSynch(msg);
-                    break;
-                default:
-                    break;
-            }
+            checkSynch(msg);
         }
     };
 

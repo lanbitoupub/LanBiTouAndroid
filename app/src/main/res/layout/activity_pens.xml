@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8px">
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center">
+    <RelativeLayout
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content">
+        <Button
+            android:id="@+id/color_red"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:background="@color/popRed"
+            android:textSize="20sp"
+            />
+        <Button
+            android:id="@+id/color_blue"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/color_red"
+            android:background="@color/popBlue"
+            android:textSize="20sp" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content">
+        <Button
+            android:id="@+id/color_green"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:background="@color/popGreen"
+            android:textSize="20sp"
+            />
+        <Button
+            android:id="@+id/color_black"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/color_green"
+            android:background="@color/popBlack"
+            android:textSize="20sp" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content">
+        <Button
+            android:id="@+id/color_yellow"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:background="@color/popYellow"
+            android:textSize="20sp"
+            />
+        <Button
+            android:id="@+id/color_brown"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/color_yellow"
+            android:background="@color/popBrown"
+            android:textSize="20sp" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content">
+        <Button
+            android:id="@+id/color_pink"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:background="@color/popPink"
+            android:textSize="20sp"
+            />
+        <Button
+            android:id="@+id/color_fuchsia"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/color_pink"
+            android:background="@color/popFuchsia"
+            android:textSize="20sp" />
+    </RelativeLayout>
+
+
+
+
+</LinearLayout>
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <SeekBar
+        android:id="@+id/paint_thick"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:maxHeight="4.0dip"
+        android:minHeight="4.0dip"
+        android:paddingLeft="16.0dip"
+        android:paddingRight="6.0dip"
+        android:max="100"
+        android:progressDrawable="@drawable/po_seekbar"
+        android:thumb="@drawable/seekbar_thumb" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/t_seekbar"
+        android:layout_gravity="center"
+        android:textSize="16sp"/>
+</LinearLayout>
+
+
+
+
+</LinearLayout>

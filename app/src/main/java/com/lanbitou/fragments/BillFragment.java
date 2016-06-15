@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -28,6 +30,7 @@ import com.lanbitou.R;
 import com.lanbitou.activities.AddBillActivity;
 import com.lanbitou.adapters.BillListAdapter;
 import com.lanbitou.entities.Bill;
+import com.lanbitou.entities.BillFolder;
 import com.lanbitou.net.BillUrl;
 import com.lanbitou.net.IsNet;
 import com.lanbitou.thread.HttpGetThread;
@@ -70,8 +73,9 @@ public class BillFragment extends Fragment implements BillFolderFragment.OnFragm
 
     private BillListAdapter billListadapter;
 
-    private int uid;                         //登陆用户Id
-    private String folder = "日常";          //所在文件夹,默认为 日常
+
+    private int uid = -1;                         //登陆用户Id
+    private String folder;          //所在文件夹,默认为 日常
 
     private FragmentTransaction fragmentTransaction;
     private BillFolderFragment folderFragment;
@@ -90,8 +94,29 @@ public class BillFragment extends Fragment implements BillFolderFragment.OnFragm
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_bill, container,false);
 
-        //获取uid
-        uid = 1;
+        SharedPreferences preferences = getActivity().getSharedPreferences("lanbitou", Context.MODE_PRIVATE);
+
+        uid = preferences.getInt("uid", -1);
+
+        List<String> names = new FileUtil("/bill/" + uid).getInterFileName();
+        if(names.isEmpty()){
+            folder = "日常";
+            new FileUtil("/bill/" + uid,folder);
+            BillFolder bf = new BillFolder(uid,folder);
+            List<BillFolder> list = new ArrayList<BillFolder>();
+            list.add(bf);
+            String firstBillFolderJson = gson.toJson(list);
+            if(IsNet.isConnect(getActivity())){
+                ThreadPoolUtils.execute(new HttpPostThread(postSomeBillFolderHandler,
+                        BillUrl.ADD_SOME_BILLS_FOLDER_URL,firstBillFolderJson,0x124));
+            } else {
+                FileUtil fu = new FileUtil("/bill/" + uid + TALLY_FOLTER,TALLY_FOLTER_ADD_FOLDER);
+                fu.appendToJsonListTail(firstBillFolderJson);
+            }
+            toastMeesage("已经自动添加一个名为 日常 的默认账单");
+        }else{
+            folder = names.get(0);
+        }
 
         toAddBillBtn = (Button) view.findViewById(R.id.go_add_bill_btn);
         inMoneyTv = (TextView) view.findViewById(R.id.in_money_tv);
@@ -103,7 +128,7 @@ public class BillFragment extends Fragment implements BillFolderFragment.OnFragm
                 Intent i =
                         new Intent(getActivity(),AddBillActivity.class);
                 i.putExtra("folder",folder);  //传过去文件夹,以备查看与修改
-                i.putExtra("operate","添加");
+                i.putExtra("operate","添加"); //操作
                 startActivityForResult(i,ADD_BILL_REQUEST_CODE);
             }
         });
@@ -114,7 +139,7 @@ public class BillFragment extends Fragment implements BillFolderFragment.OnFragm
         if(IsNet.isConnect(getActivity())){
 
             //检查本地情况,是否有记录账单操作的标记文件
-            FileUtil recordFile = new FileUtil("/bill/" + uid + TALLY_FOLTER,null);
+            FileUtil recordFile = new FileUtil("/bill/" + uid + TALLY_FOLTER);
             String addJsonStr = recordFile.readByFileName(TALLY_FOLTER_ADD);
             String deleteJsonStr = recordFile.readByFileName(TALLY_FOLTER_DELETE);
             String updateJsonStr = recordFile.readByFileName(TALLY_FOLTER_UPDATE);
@@ -199,8 +224,6 @@ public class BillFragment extends Fragment implements BillFolderFragment.OnFragm
 
         return view;
     }
-
-
 
     /**
      * 当文件夹碎片返回时获取文件夹名字,执行其他其他一些操作

@@ -8,7 +8,6 @@
     <string name="newest_notes">最新笔记</string>
     <string name="all_notes">所有笔记</string>
     <string name="bill">账单</string>
-    <string name="schedule">日程</string>
     <string name="setting">设置</string>
     <string name="last_synch_date">上次同时间</string>
     <string name="addNewBill">添加一条收支</string>
@@ -22,4 +21,5 @@
 
     <string name="finish">确定</string>
     <string name="cencal">取消</string>
+    <string name="paintTitle">画画板</string>
 </resources>

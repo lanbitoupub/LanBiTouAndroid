@@ -12,7 +12,14 @@
     <color name="yellow">#f9d802</color>
     <color name="billFolderBg">#9ecf21</color>
     <color name="dark">#152746</color>
-
+    
+    <color name="popRed">#ff0000</color>
+    <color name="popGreen">#00ff00</color>
+    <color name="popBlue">#0000ff</color>
+    <color name="popBlack">#000000</color>
+    <color name="popBrown">#a52a2a</color>
+    <color name="popPink">#ff1493</color>
+    <color name="popFuchsia">#ff00ff</color>
 
 
     <!--登录注册界面使用-->
@@ -21,8 +28,8 @@
     <color name="primary_darker">#CC1D1D</color>
     <color name="accent">#FFFFFF</color>
     <color name="iron">#CCCCCC</color>
-
-
+    <color name="paint_f_bg">#6e75a3</color>
+    <color name="popYellow">#ffff00</color>
 
 
 </resources>

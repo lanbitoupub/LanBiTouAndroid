@@ -22,10 +22,12 @@ public class BillFolderAdapter extends BaseAdapter{
 
     private List<BillFolder> folderList ;
     private Context context;
+    private int uid;
 
 
-    public BillFolderAdapter(Context context){
+    public BillFolderAdapter(Context context, int uid){
         this.context = context;
+        this.uid = uid;
         setFolderList();
     }
 
@@ -68,8 +70,6 @@ public class BillFolderAdapter extends BaseAdapter{
      */
     public void setFolderList(){
 
-        //获取uid
-        int uid = 1;
         FileUtil fileUtil = new FileUtil("/bill/" + uid);
         folderList = new ArrayList<>();
         List<String> folderNameList = fileUtil.getInterFileName();

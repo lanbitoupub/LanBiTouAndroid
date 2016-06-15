@@ -1,5 +1,6 @@
 package com.lanbitou.util;
 
+import android.graphics.Bitmap;
 import android.os.Environment;
 
 import java.io.BufferedInputStream;
@@ -225,14 +226,30 @@ public class FileUtil {
      */
     public List<String> getInterFileName(){
         List<String> nameList = new ArrayList<>();
-        String[] names = folderPath.list();
-        for(String n : names){
+        for(String n : folderPath.list()){
             if(!n.equals(".tallyLastOperate")){             //排除临时文件夹
                 nameList.add(n);
             }
         }
         return nameList;
     }
+
+    /**
+     * 根据后缀名获取文件的完整路径
+     * @return
+     */
+    public List<String> getWholePathByExact(String exactName){
+        List<String> nameList = new ArrayList<>();
+        for(String n : folderPath.list()){
+            if(n.endsWith(".png")){                      //匹配路径
+                //Log.i("lanbitou","获取的图片路径为: " + folderPath + "/" + n);
+                nameList.add(folderPath + "/" + n);
+            }
+        }
+        return nameList;
+    }
+
+
 
     public static void delete(String path) {
         File file = new File(root + path);
@@ -287,6 +304,31 @@ public class FileUtil {
         this.write("");
     }
 
+    /**
+     * 将bitMap保存为图片
+     * @param bitmap
+     */
+    public void saveBitmapAsImageFile(Bitmap bitmap) {
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileOutputStream = new FileOutputStream(path);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);// 以100%的品质创建png
+            fileOutputStream.flush();
+            fileOutputStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+    /**
+     * 得到文件夹下文件的数量
+     * @return
+     */
+    public int getFileCount(){
+        //Log.i("lanbitou","一共有:" + folderPath.list().length + "张图片");
+        return folderPath.list().length;
+    }
 
 }

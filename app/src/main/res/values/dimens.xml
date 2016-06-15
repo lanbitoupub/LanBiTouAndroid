@@ -9,5 +9,7 @@
     <dimen name="bill_list_item_in_margin">10dp</dimen>
     <dimen name="bill_list_divider">5dp</dimen>
     <dimen name="show_folder_size">20sp</dimen>
+    <dimen name="paint_item_padding">6dp</dimen>
+    <dimen name="paint_item_height">190dp</dimen>
 
 </resources>

@@ -21,9 +21,9 @@
             android:title="@string/bill" />
 
         <item
-            android:id="@+id/nav_schedule"
+            android:id="@+id/nav_paint"
             android:icon="@drawable/ic_menu_manage"
-            android:title="@string/schedule" />
+            android:title="@string/paintTitle" />
     </group>
 
     <item android:title="">
