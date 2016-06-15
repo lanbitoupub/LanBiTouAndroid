@@ -1,20 +1,28 @@
 package com.lanbitou.entities;
 
 /**
- * Created by joyce on 16-5-24.
+ * Created by joyce on 16-6-8.
  */
 public class NoteBookEntity {
 
     private int bid;
     private int uid;
     private String name;
+    private int fid;
 
+    public NoteBookEntity() {}
 
-    public NoteBookEntity(int bid, int uid, String name) {
+    public NoteBookEntity(int i) {
+        this(i, 0, null, 0);
+    }
+
+    public NoteBookEntity(int bid, int uid, String name, int fid) {
         this.bid = bid;
         this.uid = uid;
         this.name = name;
+        this.fid = fid;
     }
+
 
     public int getBid() {
         return bid;
@@ -38,6 +46,14 @@ public class NoteBookEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getFid() {
+        return fid;
+    }
+
+    public void setFid(int fid) {
+        this.fid = fid;
     }
 
 

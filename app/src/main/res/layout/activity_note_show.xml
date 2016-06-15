@@ -11,6 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <Spinner
+        android:id="@+id/select_notebook_sp"
+        android:layout_width = "match_parent"
+        android:layout_height ="60dp"
+        />
+
     <EditText
         android:id="@+id/content"
         android:layout_width="match_parent"

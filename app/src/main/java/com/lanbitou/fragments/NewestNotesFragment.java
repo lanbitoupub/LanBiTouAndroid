@@ -41,6 +41,7 @@ import java.util.TimerTask;
  */
 public class NewestNotesFragment extends Fragment{
 
+    private static final String TAG = "NewestNotesFragment";
     private String POSTONE = "http://192.168.1.108:8082/lanbitou/note/postOne";
     private String GETONE = "http://192.168.1.108:8082/lanbitou/note/getOne";
     private String GETALL = "http://192.168.1.108:8082/lanbitou/note/getAll";
@@ -51,10 +52,10 @@ public class NewestNotesFragment extends Fragment{
     private TextView textView;
     private ListView listView;
     private NoteAdapter noteAdapter;
-    private List<NoteEntity> listItems = new ArrayList<NoteEntity>();
+    private List<NoteEntity> noteListItems = new ArrayList<NoteEntity>();
     private Gson gson = new Gson();
-    private Type listType = new TypeToken<List<NoteEntity>>() {}.getType();
-    private FileUtil fileUtil = new FileUtil("/note", "/note.lan");
+    private Type noteListType = new TypeToken<List<NoteEntity>>() {}.getType();
+    private FileUtil notesFileUtil = new FileUtil("/note", "/note.lan");
     private FileUtil updateFileUtil = new FileUtil("/note", "/update.lan");
     private FileUtil postFileUtil = new FileUtil("/note", "/post.lan");
     private FileUtil deleteFileUtil = new FileUtil("/note", "/delete.lan");
@@ -69,13 +70,14 @@ public class NewestNotesFragment extends Fragment{
                     String json = (String) msg.obj;
                     if(json != null && !json.equals("")) {//返回get请求
                         if (msg.arg1 == 1) {
-                            listItems.clear();
-                            fileUtil.write(json);
+                            noteListItems.clear();
+                            notesFileUtil.write(json);
                         }
 
-                        List<NoteEntity> newListItems = gson.fromJson(json, listType);
+//                        noteListItems = gson.fromJson(json, noteListType);
+                        List<NoteEntity> newListItems = gson.fromJson(json, noteListType);
                         for(NoteEntity ne : newListItems) {
-                            listItems.add(ne);
+                            noteListItems.add(ne);
                             Log.i("tag",ne.toString());
                         }
                         noteAdapter.notifyDataSetChanged();
@@ -114,21 +116,25 @@ public class NewestNotesFragment extends Fragment{
         textView = (TextView) view.findViewById(R.id.textview);
         listView = (ListView) view.findViewById(R.id.listview);
 
-        listItems.clear();
-        noteAdapter = new NoteAdapter(this.getActivity(), listItems);
+        noteListItems.clear();
+        noteAdapter = new NoteAdapter(this.getActivity(), noteListItems);
         listView.setAdapter(noteAdapter);
 
         Log.i("","");
 
 
-
         String result = "";
-        if(!(result = fileUtil.read()).equals("")) {
+        if(!(result = notesFileUtil.read()).equals("")) {
             Message msg = new Message();
             msg.what = 0x123;
             msg.obj = result;
             msg.arg1 = 0;//表示从本地获取的数据
             handler.sendMessage(msg);
+
+
+            if (IsNet.isConnect(getActivity())) {
+                checkNoteCache();
+            }
 
             Timer timer = new Timer(true);
             TimerTask task = new TimerTask() {
@@ -136,11 +142,16 @@ public class NewestNotesFragment extends Fragment{
                 @Override
                 public void run() {
                     Looper.prepare();
+
                     refresh();
+
                     Looper.loop();
                 }
             };
             timer.schedule(task, 3 * 1000);
+
+
+
         }
         else {
             refresh();
@@ -158,6 +169,7 @@ public class NewestNotesFragment extends Fragment{
                 intent.putExtra("isNew", false);
                 intent.putExtra("neJson",neJson);
                 intent.putExtra("itemid", id);
+                intent.putExtra("activityid", 1);
                 startActivityForResult(intent, 1);
             }
         });
@@ -166,50 +178,74 @@ public class NewestNotesFragment extends Fragment{
         return view;
     }
 
+    private void refresh() {
+
+        if (IsNet.isConnect(getActivity())) {
+
+            ThreadPoolUtils.execute(new HttpGetThread(handler, GETALL));
+
+        }
+
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 1 && resultCode == 100) {
-            boolean isNew = data.getBooleanExtra("isNew", false);
-            boolean isDelete = data.getBooleanExtra("isDelete", false);
-            Log.i("tag",isNew+"");
-            long itemid = data.getLongExtra("itemid", -1);
-            String newjson = data.getStringExtra("newjson");
-            NoteEntity newNoteEntity = gson.fromJson(newjson, NoteEntity.class);
 
-            if (isNew) {
-                listItems.add(newNoteEntity);
+            noteListItems.clear();
+            String notelistJson = notesFileUtil.read();
+            List<NoteEntity> newListItems = gson.fromJson(notelistJson, noteListType);
+            for(NoteEntity ne : newListItems) {
+                noteListItems.add(ne);
+                Log.i("tag",ne.toString());
             }
-            else if (isDelete) {
-                listItems.remove((int)itemid);
-            }
-            else {
-                listItems.remove((int)itemid);
-                listItems.add((int)itemid, newNoteEntity);
-            }
-
-            fileUtil.write(gson.toJson(listItems, listType));
+//            noteListItems = gson.fromJson(notelistJson, noteListType);
             noteAdapter.notifyDataSetChanged();
+
+
+
+            /***[6.15]原本是获取activity返回的增删改查等数据的变化，并相应修改listview***/
+//            boolean isNew = data.getBooleanExtra("isNew", false);
+//            boolean isDelete = data.getBooleanExtra("isDelete", false);
+//            Log.i("tag",isNew+"");
+//            long itemid = data.getLongExtra("itemid", -1);
+//            String newjson = data.getStringExtra("newjson");
+//            NoteEntity newNoteEntity = gson.fromJson(newjson, NoteEntity.class);
+//
+//            if (isNew) {
+//                listItems.add(newNoteEntity);
+//            }
+//            else if (isDelete) {
+//                listItems.remove((int)itemid);
+//            }
+//            else {
+//                listItems.remove((int)itemid);
+//                listItems.add((int)itemid, newNoteEntity);
+//            }
+//
+//            fileUtil.write(gson.toJson(listItems, listType));
+//            noteAdapter.notifyDataSetChanged();
         }
 
     }
 
-    private void refresh() {
-
-        if (IsNet.isConnect(getActivity())) {
-            ThreadPoolUtils.execute(new HttpGetThread(handler, GETALL));
-
-            checkCache();
-        }
 
 
-    }
-
-    private void checkCache() {
+    private void checkNoteCache() {
 
         //检查是否有断网时未同步的文件
+
+
+        String notelistJson = notesFileUtil.read();
+        List<NoteEntity> noteCacheListItems = new ArrayList<>();
+        List<NoteEntity> newListItems = gson.fromJson(notelistJson, noteListType);
+        for(NoteEntity ne : newListItems) {
+            noteCacheListItems.add(ne);
+            Log.i("tag",ne.toString());
+        }
 
         //检查修改的文件
         String update = "";
@@ -228,11 +264,15 @@ public class NewestNotesFragment extends Fragment{
             Toast.makeText(getActivity(), finalid.length + "", Toast.LENGTH_SHORT).show();
 
             for(int i : finalid) {
-                oneEntity = gson.fromJson(FileUtil.read("/note/" +  i + ".lan"), NoteEntity.class);
-                updateNoteEntity.add(oneEntity);
+                for (NoteEntity noteEntity : noteCacheListItems) {
+                    if (noteEntity.getNid() == i) {
+                        updateNoteEntity.add(noteEntity);
+                    }
+                }
             }
 
-            String param = gson.toJson(updateNoteEntity, listType);
+
+            String param = gson.toJson(updateNoteEntity, noteListType);
 
             //发送更新
             ThreadPoolUtils.execute(new HttpPostThread(handler, UPDATEALL, param));
@@ -256,11 +296,12 @@ public class NewestNotesFragment extends Fragment{
             Toast.makeText(getActivity(), finalid.length + "", Toast.LENGTH_SHORT).show();
 
             for(int i : finalid) {
-                oneEntity = gson.fromJson(FileUtil.read("/note/" +  i + ".lan"), NoteEntity.class);
-                deleteNoteEntity.add(oneEntity);
+
+                deleteNoteEntity.add(new NoteEntity(i));
+
             }
 
-            String param = gson.toJson(deleteNoteEntity, listType);
+            String param = gson.toJson(deleteNoteEntity, noteListType);
 
             //发送更新
             ThreadPoolUtils.execute(new HttpPostThread(handler, DELETEALL, param));
@@ -274,15 +315,26 @@ public class NewestNotesFragment extends Fragment{
             Log.i("TAG",post);
 
 
-            List<NoteEntity> postNoteEntity = new ArrayList<NoteEntity>();
-            int id = Integer.valueOf(post);
-
-            for(int i = -1; i >= id ;i--) {
-                oneEntity = gson.fromJson(FileUtil.read("/note/" +  i + ".lan"), NoteEntity.class);
-                postNoteEntity.add(oneEntity);
+            String[] postid = post.split("#");
+            int[] id = new int[postid.length];
+            for(int i = 0;i < postid.length;i++) {
+                id[i] = Integer.valueOf(postid[i]);
             }
 
-            String param = gson.toJson(postNoteEntity, listType);
+            int[] finalid = ArrayUtil.removeSame(id);
+            List<NoteEntity> postNoteEntity = new ArrayList<NoteEntity>();
+            Toast.makeText(getActivity(), finalid.length + "", Toast.LENGTH_SHORT).show();
+
+            for(int i : finalid) {
+                for (NoteEntity noteEntity : noteCacheListItems) {
+                    if (noteEntity.getNid() == i) {
+                        postNoteEntity.add(noteEntity);
+                        Log.i(TAG, noteEntity.getTitle());
+                    }
+                }
+            }
+
+            String param = gson.toJson(postNoteEntity, noteListType);
 
             //发送更新
             ThreadPoolUtils.execute(new HttpPostThread(handler, POSTALL, param));

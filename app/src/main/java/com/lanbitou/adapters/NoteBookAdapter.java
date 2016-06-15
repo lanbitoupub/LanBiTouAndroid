@@ -48,11 +48,11 @@ public class NoteBookAdapter extends BaseAdapter{
 
         if(convertView == null)
         {
-            convertView = inflater.inflate(R.layout.noteitem, null);
-            TextView title = (TextView) convertView.findViewById(R.id.title);
+            convertView = inflater.inflate(R.layout.notebookitem, null);
+            TextView name = (TextView) convertView.findViewById(R.id.name);
 
             holder = new ViewHolder();
-            holder.title = title;
+            holder.name = name;
 
             convertView.setTag(holder);
         }
@@ -61,11 +61,11 @@ public class NoteBookAdapter extends BaseAdapter{
             holder = (ViewHolder) convertView.getTag();
         }
         NoteBookEntity pbe = listItems.get(position);
-        holder.title.setText(pbe.getName());
+        holder.name.setText(pbe.getName());
         return convertView;
     }
 
     private class ViewHolder {
-        TextView title;
+        TextView name;
     }
 }

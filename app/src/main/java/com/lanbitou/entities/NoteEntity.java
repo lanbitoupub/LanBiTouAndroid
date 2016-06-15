@@ -20,6 +20,10 @@ public class NoteEntity {
         this(0, 0, 0, title, null, null, null);
     }
 
+    public NoteEntity(int nid) {
+        this(nid, 0, 0, null, null, null, null);
+    }
+
     public NoteEntity(int nid, int uid, int bid, String title, String content, Boolean mark, String created_at) {
         this.nid = nid;
         this.uid = uid;
