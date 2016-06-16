@@ -27,6 +27,7 @@ import com.lanbitou.adapters.NoteAdapter;
 import com.lanbitou.entities.NoteBookEntity;
 import com.lanbitou.entities.NoteEntity;
 import com.lanbitou.net.IsNet;
+import com.lanbitou.net.NoteUrl;
 import com.lanbitou.thread.HttpGetThread;
 import com.lanbitou.thread.HttpPostThread;
 import com.lanbitou.thread.ThreadPoolUtils;
@@ -45,12 +46,6 @@ import java.util.TimerTask;
  */
 public class NoteBookActivity extends AppCompatActivity {
 
-    private String POSTONE = "http://192.168.1.108:8082/lanbitou/note/postOne";
-    private String GETONE = "http://192.168.1.108:8082/lanbitou/note/getOne";
-    private String GETSOME = "http://192.168.1.108:8082/lanbitou/note/getSome";
-    private String UPDATEALL = "http://192.168.1.108:8082/lanbitou/note/updateAll";
-    private String DELETEALL = "http://192.168.1.108:8082/lanbitou/note/deleteAll";
-    private String POSTALL = "http://192.168.1.108:8082/lanbitou/note/postAll";
 
     private int bid = 1;
 
@@ -254,7 +249,7 @@ public class NoteBookActivity extends AppCompatActivity {
     private void refresh() {
 
         if (IsNet.isConnect(context)) {
-            ThreadPoolUtils.execute(new HttpGetThread(handler, GETSOME + "/" + bid));
+            ThreadPoolUtils.execute(new HttpGetThread(handler, NoteUrl.NOTE_GETSOME + "/" + bid));
         }
 
     }

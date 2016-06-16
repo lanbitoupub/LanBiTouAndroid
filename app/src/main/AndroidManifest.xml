@@ -61,14 +61,15 @@
         <activity
             android:name=".activities.SignupActivity"
             android:theme="@style/AppTheme.Dark" />
+        <activity android:name=".activities.NoteBookActivity" />
+        <activity android:name=".activities.PaintActivity" />
+        <activity
+            android:name=".activities.ShowSignalPaintActivity"
+            android:theme="@android:style/Theme.NoTitleBar" />
 
-        <activity android:name=".activities.NoteBookActivity"/>
-
-        <activity android:name=".activities.PaintActivity"/>
-
-        <activity android:name=".activities.ShowSignalPaintActivity"
-            android:theme="@android:style/Theme.NoTitleBar"/>
-
+        <service
+            android:name=".service.SyncService">
+        </service>
     </application>
 
 </manifest>

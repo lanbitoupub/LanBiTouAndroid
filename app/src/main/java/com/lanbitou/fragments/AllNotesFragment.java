@@ -31,6 +31,8 @@ import com.lanbitou.adapters.NoteBookAdapter;
 import com.lanbitou.entities.NoteBookEntity;
 import com.lanbitou.entities.NoteEntity;
 import com.lanbitou.net.IsNet;
+import com.lanbitou.net.NoteUrl;
+import com.lanbitou.service.SyncService;
 import com.lanbitou.thread.HttpGetThread;
 import com.lanbitou.thread.HttpPostThread;
 import com.lanbitou.thread.ThreadPoolUtils;
@@ -53,15 +55,8 @@ import java.util.regex.Pattern;
 public class AllNotesFragment extends Fragment{
 
     private static final String TAG = "ALlNoteFragment";
-    private String POSTONE = "http://192.168.1.108:8082/lanbitou/notebook/postOne";
-    private String DELETEONE = "http://192.168.1.108:8082/lanbitou/notebook/deleteOne";
-    private String GETALL = "http://192.168.1.108:8082/lanbitou/notebook/getAll";
-    private static final String UPDATEONE = "http://192.168.1.108:8082/lanbitou/notebook/updateOne";
 
 
-    private static String UPDATEALL = "http://192.168.1.108:8082/lanbitou/notebook/updateAll";
-    private static String DELETEALL = "http://192.168.1.108:8082/lanbitou/notebook/deleteAll";
-    private static String POSTALL = "http://192.168.1.108:8082/lanbitou/notebook/postAll";
 
     private TextView textView;
     private ListView listView;
@@ -87,6 +82,8 @@ public class AllNotesFragment extends Fragment{
                     if(json != null && !json.equals("")) {//返回get请求
                         if (msg.arg1 == 1) {
                             noteBooklistItems.clear();
+                            noteBookFileUtil.write(json);
+
                         }
 
                         List<NoteBookEntity> newListItems = gson.fromJson(json, noteBookListType);
@@ -94,12 +91,23 @@ public class AllNotesFragment extends Fragment{
                             noteBooklistItems.add(nbe);
                             Log.i("tag",nbe.getName());
                         }
+
                         noteBookAdapter.notifyDataSetChanged();
                     }
                     break;
                 case 0x124://返回post数据
                     String result = (String) msg.obj;
-                    if (result.equals("updateOne")) {//返回updateOne请求
+                    if (result.substring(0,7).equals("postOne")) {
+
+                        String bid_fid =  result.substring(8, result.length());
+                        String[] newstid = bid_fid.split("#");
+                        int newestbid = Integer.valueOf(newstid[0]);
+
+                        noteBooklistItems.get(noteBooklistItems.size()-1).setBid(newestbid);
+                        String notesJson = gson.toJson(noteBooklistItems, noteBookListType);
+                        noteBookFileUtil.write(notesJson);
+                    }
+                    else if (result.equals("updateOne")) {//返回updateOne请求
 
                     }
                     else if (result.equals("updateAll")) {//返回updateAll请求
@@ -150,7 +158,8 @@ public class AllNotesFragment extends Fragment{
             handler.sendMessage(msg);
 
             if (IsNet.isConnect(getActivity())) {
-                checkNoteBookCache();
+                Intent intent = new Intent(getActivity(), SyncService.class);
+                getActivity().startService(intent);
             }
 
             Timer timer = new Timer(true);
@@ -286,10 +295,10 @@ public class AllNotesFragment extends Fragment{
         if (IsNet.isConnect(getActivity())) {
             if (noteBookEntity.getBid() > 0)
             {
-                ThreadPoolUtils.execute(new HttpPostThread(handler, UPDATEONE, postJson));
+                ThreadPoolUtils.execute(new HttpPostThread(handler, NoteUrl.NOTEBOOK_UPDATEONE, postJson));
             }
             else {
-                ThreadPoolUtils.execute(new HttpPostThread(handler, POSTONE, postJson));
+                ThreadPoolUtils.execute(new HttpPostThread(handler, NoteUrl.NOTEBOOK_POSTONE, postJson));
             }
 
         }
@@ -320,7 +329,7 @@ public class AllNotesFragment extends Fragment{
         String postJson = gson.toJson(noteBookEntity);
         if (IsNet.isConnect(getActivity())) {
 
-            ThreadPoolUtils.execute(new HttpPostThread(handler, DELETEONE, postJson));
+            ThreadPoolUtils.execute(new HttpPostThread(handler, NoteUrl.NOTEBOOK_DELETEONE, postJson));
         }
         else {
             deleteFileUtil.write(noteBookEntity.getBid() + "#", true);
@@ -376,7 +385,7 @@ public class AllNotesFragment extends Fragment{
 
         if (IsNet.isConnect(getActivity())) {
 
-            ThreadPoolUtils.execute(new HttpPostThread(handler, POSTONE, postJson));
+            ThreadPoolUtils.execute(new HttpPostThread(handler, NoteUrl.NOTEBOOK_POSTONE, postJson));
         }
         else {
             postFileUtil.write(noteBookEntity.getBid() + "#",true);
@@ -389,109 +398,7 @@ public class AllNotesFragment extends Fragment{
     private void refresh() {
 
         if (IsNet.isConnect(getActivity())) {
-            ThreadPoolUtils.execute(new HttpGetThread(handler, GETALL));
-        }
-
-    }
-
-    public void checkNoteBookCache() {
-
-        //检查是否有断网时未同步的文件
-
-        String notelistJson = noteBookFileUtil.read();
-        List<NoteBookEntity> noteCacheListItems = new ArrayList<>();
-        List<NoteBookEntity> newListItems = gson.fromJson(notelistJson, noteBookListType);
-        for(NoteBookEntity ne : newListItems) {
-            noteCacheListItems.add(ne);
-            Log.i("tag",ne.toString());
-        }
-
-        //检查修改的文件
-        String update = "";
-        if (!(update = updateFileUtil.read()).equals("")) {
-
-            Log.i("TAG",update);
-
-            String[] updateid = update.split("#");
-            int[] id = new int[updateid.length];
-            for(int i = 0;i < updateid.length;i++) {
-                id[i] = Integer.valueOf(updateid[i]);
-            }
-
-            int[] finalid = ArrayUtil.removeSame(id);
-            List<NoteBookEntity> updateNoteBookEntity = new ArrayList<NoteBookEntity>();
-
-            for(int i : finalid) {
-                for (NoteBookEntity noteBookEntity : noteCacheListItems) {
-                    if (noteBookEntity.getBid() == i) {
-                        updateNoteBookEntity.add(noteBookEntity);
-                    }
-
-                }
-
-            }
-
-            String param = gson.toJson(updateNoteBookEntity, noteBookListType);
-
-            //发送更新
-            ThreadPoolUtils.execute(new HttpPostThread(handler, UPDATEALL, param));
-        }
-
-
-        //检查删除的文件
-        String delete = "";
-        if (!(delete = deleteFileUtil.read()).equals("")) {
-
-            Log.i("TAG",delete);
-
-            String[] postid = delete.split("#");
-            int[] id = new int[postid.length];
-            for(int i = 0;i < postid.length;i++) {
-                id[i] = Integer.valueOf(postid[i]);
-            }
-
-            int[] finalid = ArrayUtil.removeSame(id);
-            List<NoteBookEntity> deleteNoteBookEntity = new ArrayList<NoteBookEntity>();
-
-            for(int i : finalid) {
-                deleteNoteBookEntity.add(new NoteBookEntity(i));
-            }
-
-            String param = gson.toJson(deleteNoteBookEntity, noteBookListType);
-
-            //发送更新
-            ThreadPoolUtils.execute(new HttpPostThread(handler, DELETEALL, param));
-        }
-
-
-        //检查添加的文件
-        String post = "";
-        if (!(post = postFileUtil.read()).equals("")) {
-
-            Log.i("TAG",post);
-
-
-            String[] postid = post.split("#");
-            int[] id = new int[postid.length];
-            for(int i = 0;i < postid.length;i++) {
-                id[i] = Integer.valueOf(postid[i]);
-            }
-
-            int[] finalid = ArrayUtil.removeSame(id);
-            List<NoteBookEntity> postNoteBookEntity = new ArrayList<NoteBookEntity>();
-
-            for(int i : finalid) {
-                for (NoteBookEntity noteBookEntity : noteCacheListItems) {
-                    if (noteBookEntity.getBid() == i) {
-                        postNoteBookEntity.add(noteBookEntity);
-                    }
-                }
-            }
-
-            String param = gson.toJson(postNoteBookEntity, noteBookListType);
-
-            //发送更新
-            ThreadPoolUtils.execute(new HttpPostThread(handler, POSTALL, param));
+            ThreadPoolUtils.execute(new HttpGetThread(handler, NoteUrl.NOTEBOOK_GETALL));
         }
 
     }

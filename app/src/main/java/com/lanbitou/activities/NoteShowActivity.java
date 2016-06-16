@@ -22,6 +22,7 @@ import com.lanbitou.R;
 import com.lanbitou.entities.NoteBookEntity;
 import com.lanbitou.entities.NoteEntity;
 import com.lanbitou.net.IsNet;
+import com.lanbitou.net.NoteUrl;
 import com.lanbitou.thread.HttpPostThread;
 import com.lanbitou.thread.ThreadPoolUtils;
 import com.lanbitou.util.FileUtil;
@@ -62,9 +63,7 @@ public class NoteShowActivity extends AppCompatActivity implements AdapterView.O
 
     private Context context = this;
 
-    private static String UPDATEONE = "http://192.168.1.108:8082/lanbitou/note/updateOne";
-    private String POSTONE = "http://192.168.1.108:8082/lanbitou/note/postOne";
-    private String DELETEONE = "http://192.168.1.108:8082/lanbitou/note/deleteOne";
+
 
     private String postJson = "";
 
@@ -250,7 +249,7 @@ public class NoteShowActivity extends AppCompatActivity implements AdapterView.O
 
 
                             if (IsNet.isConnect(context)) {
-                                ThreadPoolUtils.execute(new HttpPostThread(handler, POSTONE, postJson));
+                                ThreadPoolUtils.execute(new HttpPostThread(handler, NoteUrl.NOTE_POSTONE, postJson));
                             } else {
                                 postFileUtil.write(noteEntity.getNid() + "#", true);
                             }
@@ -275,7 +274,7 @@ public class NoteShowActivity extends AppCompatActivity implements AdapterView.O
                             notesFileUtil.write(notesJson);
 
                             if (IsNet.isConnect(context)) {
-                                ThreadPoolUtils.execute(new HttpPostThread(handler, POSTONE, postJson));
+                                ThreadPoolUtils.execute(new HttpPostThread(handler, NoteUrl.NOTE_POSTONE, postJson));
 
                             } else {
                                 postFileUtil.write(noteEntity.getNid() + "#", true);
@@ -304,7 +303,7 @@ public class NoteShowActivity extends AppCompatActivity implements AdapterView.O
 
                         if (IsNet.isConnect(context)) {
                             Toast.makeText(context, "update", Toast.LENGTH_LONG).show();
-                            ThreadPoolUtils.execute(new HttpPostThread(handler, UPDATEONE, postJson));
+                            ThreadPoolUtils.execute(new HttpPostThread(handler, NoteUrl.NOTE_UPDATEONE, postJson));
                         }
                         else {
                             Toast.makeText(context, "writeupdate", Toast.LENGTH_LONG).show();
@@ -334,7 +333,7 @@ public class NoteShowActivity extends AppCompatActivity implements AdapterView.O
 
 
                     if (IsNet.isConnect(context)) {
-                        ThreadPoolUtils.execute(new HttpPostThread(handler, DELETEONE, postJson));
+                        ThreadPoolUtils.execute(new HttpPostThread(handler, NoteUrl.NOTE_DELETEONE, postJson));
                         FileUtil.delete("/note/" + noteEntity.getNid() + ".lan");
                     } else {
                         deleteFileUtil.write(noteEntity.getNid() + "#", true);
