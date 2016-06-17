@@ -6,7 +6,7 @@ package com.lanbitou.net;
  */
 public class NoteUrl {
 
-    public final static String ROOT_URL = "http://192.168.1.108:8082/lanbitou";
+    public final static String ROOT_URL = "http://10.0.2.2:8082/lanbitou";
 
     /***笔记本***/
     public final static String NOTEBOOK_UPDATEONE = ROOT_URL + "/notebook/updateOne";
