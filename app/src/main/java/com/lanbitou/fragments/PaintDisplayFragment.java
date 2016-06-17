@@ -6,23 +6,24 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.lanbitou.R;
-import com.lanbitou.activities.MainActivity;
 import com.lanbitou.adapters.PaintDisplayAdapter;
 
 /**
  * Created by Henvealf on 16-5-13.
  */
-public class PaintDisplayFragment extends Fragment{
+public class PaintDisplayFragment extends Fragment {
 
     private ListView listView;
     private PaintDisplayAdapter adapter;
     private int uid;
+
 
     @Nullable
     @Override
@@ -41,8 +42,10 @@ public class PaintDisplayFragment extends Fragment{
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode == MainActivity.ADD_PAINT_REQUEST_CODE){
-            adapter.notifyDataSetChanged();
-        }
+        Log.i("lanbitou", "requestCode" + requestCode + "");
+        adapter.setImagePathList();
+        adapter.notifyDataSetChanged();
     }
+
+
 }

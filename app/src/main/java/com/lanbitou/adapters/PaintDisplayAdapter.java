@@ -1,5 +1,7 @@
 package com.lanbitou.adapters;
 
+
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -26,7 +28,7 @@ public class PaintDisplayAdapter extends BaseAdapter implements View.OnClickList
     private Context context;
     private int uid;
     BitmapFactory.Options options;
-    private int bigPosition;
+    public final static int DELETE_PAINT_REQUEST_CODE = 30;
 
     public PaintDisplayAdapter(Context context, int uid){
         this.context = context;
@@ -52,16 +54,12 @@ public class PaintDisplayAdapter extends BaseAdapter implements View.OnClickList
 
     @Override
     public long getItemId(int i) {
-        if(imagePathList.size() == 0){
-            return 0;
-        }
-        return imagePathList.size() / 3 + 1;
+        return i;
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup viewGroup) {
+    public View getView(final int position, View view, ViewGroup viewGroup) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        this.bigPosition= position;
         View itemView;
 
 //        if(view == null){
@@ -80,6 +78,7 @@ public class PaintDisplayAdapter extends BaseAdapter implements View.OnClickList
         Log.i("lanbitou",pathListSize+"");
         for(int i = 0; i < imageViews.length; i++) {
             imageViews[i].setOnClickListener(this);
+            imageViews[i].setTag(position);
             int index = position * imageViews.length + i;   //每3个图片一个item
             if(pathListSize == 0){
                 break;
@@ -87,6 +86,7 @@ public class PaintDisplayAdapter extends BaseAdapter implements View.OnClickList
             if(index > pathListSize - 1){
                 break;
             }
+
             Bitmap bm =
                     BitmapFactory.decodeFile(imagePathList.get(index), options);
             imageViews[i].setImageBitmap(bm);
@@ -94,7 +94,7 @@ public class PaintDisplayAdapter extends BaseAdapter implements View.OnClickList
         return itemView;
     }
 
-    private void setImagePathList(){
+    public void setImagePathList(){
         this.imagePathList = new FileUtil("/paint/" + this.uid).getWholePathByExact(".png");
     }
 
@@ -102,24 +102,27 @@ public class PaintDisplayAdapter extends BaseAdapter implements View.OnClickList
      * 图片点击后展示
      * @param view
      */
-    @Override
     public void onClick(View view) {
         int id = view.getId();
+        int position = (int) view.getTag();
         int index = -1;
         switch (id){
             case R.id.paint_display_item0_iv:
-                index = bigPosition + 0;
+                index = position * 3;
                 break;
             case R.id.paint_display_item1_iv:
-                index = bigPosition + 1;
+                index = position * 3 + 1;
                 break;
             case R.id.paint_display_item2_iv:
-                index = bigPosition + 2;
+                index = position * 3 + 2;
                 break;
         }
-        String signalWholePath = imagePathList.get(index);
-        Intent toShowI = new Intent(context, ShowSignalPaintActivity.class);
-        toShowI.putExtra("imagePath",signalWholePath);
-        context.startActivity(toShowI);
+        if(index != -1){        //避免没有点击到图片
+            String signalWholePath = imagePathList.get(index);
+            Intent toShowI = new Intent(context, ShowSignalPaintActivity.class);
+            toShowI.putExtra("imagePath",signalWholePath);
+            ((Activity)context).startActivityForResult(toShowI,DELETE_PAINT_REQUEST_CODE);
+        }
     }
+
 }

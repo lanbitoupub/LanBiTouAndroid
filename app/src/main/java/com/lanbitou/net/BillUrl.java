@@ -6,7 +6,7 @@ package com.lanbitou.net;
  */
 public class BillUrl {
 
-    public final static String ROOT_URL = "http://192.168.1.105:8082/lanbitou";
+    public final static String ROOT_URL = "http://10.0.2.2:8082/lanbitou";
 
     public final static String ADD_ONE_BILL_URL =
             ROOT_URL + "/bill/addOne";

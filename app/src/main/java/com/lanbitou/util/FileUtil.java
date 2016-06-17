@@ -168,7 +168,11 @@ public class FileUtil {
                 sb.insert(0,'[');
                 sb.append(']');
                 jsonStr = sb.toString();
-            }else{                          //不为空,在前面添加,分割符
+            }else if(fileLength == 2){      //为2,说明是[]
+                sb.append(']');
+                jsonStr = sb.toString();
+                ra.seek(fileLength-1);
+            } else {                          //不为空,在前面添加",'分割符
                 sb.insert(0,',');
                 sb.append(']');
                 jsonStr = sb.toString();

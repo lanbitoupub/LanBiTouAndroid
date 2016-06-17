@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.lanbitou.R;
+import com.lanbitou.adapters.PaintDisplayAdapter;
 import com.lanbitou.fragments.AllNotesFragment;
 import com.lanbitou.fragments.BillFragment;
 import com.lanbitou.fragments.NewestNotesFragment;
@@ -53,7 +54,6 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }
-
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -218,7 +218,8 @@ public class MainActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
 
         fragments[0].onActivityResult(requestCode, resultCode, data);
-        if(requestCode == ADD_PAINT_REQUEST_CODE){
+        if(requestCode == ADD_PAINT_REQUEST_CODE
+                || requestCode == PaintDisplayAdapter.DELETE_PAINT_REQUEST_CODE){
             fragments[3].onActivityResult(requestCode,resultCode,data);
         }
 

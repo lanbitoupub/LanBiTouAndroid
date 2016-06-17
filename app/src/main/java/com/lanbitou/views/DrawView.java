@@ -53,8 +53,10 @@ public class DrawView extends View {
         //获取高度与宽度
         view_width = context.getResources().getDisplayMetrics().widthPixels;
         view_height = context.getResources().getDisplayMetrics().heightPixels;
-        cacheCanvas.setBitmap(cacheBitmap);
+        final float scale = context.getResources().getDisplayMetrics().density;
+        view_height = (int) (view_height-(126)*scale + 0.5f);
 
+        cacheCanvas.setBitmap(cacheBitmap);
 
         initCanvas();
         savePath = new ArrayList<>();
